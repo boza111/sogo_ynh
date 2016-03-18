@@ -49,6 +49,9 @@ sudo sed -i "s@DBPASS@$db_pwd@g" ../conf/sogo.conf
 #Copy SOGo config
 sudo cp ../conf/sogo.conf /etc/sogo/sogo.conf
 
+#Configure Nginx
+sudo sed -i "s@VARPATH@$path@g" ../conf/nginx.conf
+
 #copy Nginx config
 sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
 
