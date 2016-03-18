@@ -31,7 +31,7 @@ sudo apt-key adv --keyserver keys.gnupg.net --recv-key 0x810273C4
 sudo apt-get update
 
 #install Sogo
-sudo apt-get install sogo
+sudo apt-get install sogo --assume-yes
 
 
 # If your app use a MySQL database you can use these lines to bootstrap
