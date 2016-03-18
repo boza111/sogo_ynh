@@ -1,0 +1,26 @@
+{
+    "name": "SOGo",
+    "id": "sogo",
+    "description": {
+        "en": "Sogo is an opensource groupware for E-Mail, Contacts and Calender.",
+        "fr": "Insert French Here" 
+    },
+    "developer": {
+        "name": "mattronix",
+        "email": "mattronix@weho.st",
+        "url": "http://sogo.nu"
+    },
+    "multi_instance": "false",
+    "arguments": {
+        "install" : [
+            {
+                "name": "domain",
+                "ask": {
+                    "en": "Choose a domain for sogo",
+                    "fr": "Choisissez un domaine pour sogo"
+                },
+                "example": "domain.org"
+            }
+        ]
+    }
+}

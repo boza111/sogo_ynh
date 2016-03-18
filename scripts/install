@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# causes the shell to exit if any subcommand or pipeline returns a non-zero status
+set -e
+
+app=sogo
+
+# Retrieve arguments
+domain=$1
+path=$2
+admin=$3
+is_public=$4
+codename=$("lsb_release -c -s")
+
+
+# Save app settings
+sudo yunohost app setting $app admin -v "$admin"
+sudo yunohost app setting $app is_public -v "$is_public"
+
+# Check domain/path availability
+sudo yunohost app checkurl $domain$path -a $app \
+	|| (echo "Path not available: $domain$path" && exit 1)
+
+#Add Repositories 
+echo "deb http://inverse.ca/debian $codename $codename" > sogo.list
+
+
+#Add Repository Key
+sudo apt-key adv --keyserver keys.gnupg.net --recv-key 0x810273C4
+
+#Update Package Cache
+apt-get update
+
+#install Sogo
+apt-get install sogo
+
+
+# If your app use a MySQL database you can use these lines to bootstrap
+# a database, an associated user and save the password in app settings
+ db_pwd=$(openssl rand -hex 15)
+ sudo yunohost app initdb $app -p $db_pwd
+ sudo yunohost app setting $app mysqlpwd -v $db_pwd
+
+#Set SOGo Details
+sed -i "s@ADMINUSER@$admin@g" ../conf/sogo.conf
+sed -i "s@DBUSER@$app@g" ../conf/sogo.conf
+sed -i "s@DBPASS@$db_pwd@g" ../conf/sogo.conf
+
+#Copy SOGo config
+sudo cp ../conf/sogo.conf /etc/sogo/sogo.conf
+
+#copy Nginx config
+sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
+
+
+# If app is public, add url to SSOWat conf as skipped_uris
+if [ "$is_public" = "Yes" ];
+then
+  # unprotected_uris allows SSO credentials to be passed anyway.
+  sudo yunohost app setting $app unprotected_uris -v "/"
+fi
+
+
+# Restart services
+sudo service nginx reload
+sudo yunohost app ssowatconf
