@@ -13,3 +13,4 @@ https://yunohost.org/packaging_apps
 # sogo_ynh
 # sogo_ynh
 # sogo_ynh
+# sogo_ynh
