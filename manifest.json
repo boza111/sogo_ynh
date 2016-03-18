@@ -14,13 +14,32 @@
     "arguments": {
         "install" : [
             {
+                "name": "admin",
+		"type": "user",
+                "ask": {
+                    "en": "Choose an admin user",
+                    "fr": "Choisissez l’administrateur"
+                },
+                "example": "johndoe"
+            },
+            {
                 "name": "domain",
                 "ask": {
                     "en": "Choose a domain for sogo",
                     "fr": "Choisissez un domaine pour sogo"
                 },
                 "example": "domain.org"
+            },
+            {
+                "name": "is_public",
+                "ask": {
+                    "en": "Is it a public application?",
+                    "fr": "Est-ce une application publique ?"
+                },
+                "choices": ["Yes", "No"],
+                "default": "Yes"
             }
+
         ]
     }
 }
