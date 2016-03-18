@@ -8,8 +8,8 @@ app=sogo
 # Retrieve arguments
 domain=$1
 admin=$2
-path=$3
-is_public=$4
+is_public=$3
+path="/SOGo"
 codename=$(lsb_release -c -s)
 
 
