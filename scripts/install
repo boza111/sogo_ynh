@@ -10,7 +10,7 @@ domain=$1
 path=$2
 admin=$3
 is_public=$4
-codename=$("lsb_release -c -s")
+codename=$(lsb_release -c -s)
 
 
 # Save app settings
