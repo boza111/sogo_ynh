@@ -1,16 +1,9 @@
-# YunoHost example app #
+# SOGo for Yunohost #
+
+SOGo is an opensource groupware solution which has Webmail, a global address book and Calender and Contacts which can be synced via caldav or cardav.
 
 ## Usage ##
-- Add application source files into `sources` subfolder.
-- Edit `conf/nginx.conf` file to match application prerequisites.
-- Edit manifest with application specific information.
-- Edit the install, upgrade, remove, backup, restore scripts.
-- Add a LICENSE file for the package.
+Make sure you set the path to "/SOGo" case matters or SOGo will not work.
 
-**More information on the documentation page:**    
-https://yunohost.org/packaging_apps
-# sogo_ynh
-# sogo_ynh
-# sogo_ynh
-# sogo_ynh
-# sogo_ynh
+"yunohost app install https://github.com/mattronix/sogo_ynh"
+
