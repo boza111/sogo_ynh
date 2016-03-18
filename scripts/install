@@ -8,9 +8,16 @@ app=sogo
 # Retrieve arguments
 domain=$1
 admin=$2
+path='/SOGo'
 is_public=$3
 codename=$(lsb_release -c -s)
 
+
+# Check domain/path availability
+sudo yunohost app checkurl $domain$path -a bolt
+if [[ ! $? -eq 0 ]]; then
+    exit 1
+fi
 
 # Save app settings
 sudo yunohost app setting $app admin -v "$admin"
