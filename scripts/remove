@@ -17,6 +17,7 @@ sudo rm -f /etc/nginx/conf.d/$domain.d/$app.conf
 
 sudo rm /etc/apt/sources.list.d/yunohost.list 
 sudo apt-get update
+sudo apt-get remove sogo
 
 
 # Restart services
