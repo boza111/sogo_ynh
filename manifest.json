@@ -14,6 +14,14 @@
     "arguments": {
         "install" : [
             {
+                "name": "domain",
+                "ask": {
+                    "en": "Choose a domain for sogo",
+                    "fr": "Choisissez un domaine pour sogo"
+                },
+                "example": "domain.org"
+            },
+            {
                 "name": "admin",
 		"type": "user",
                 "ask": {
@@ -21,14 +29,6 @@
                     "fr": "Choisissez l’administrateur"
                 },
                 "example": "johndoe"
-            },
-            {
-                "name": "domain",
-                "ask": {
-                    "en": "Choose a domain for sogo",
-                    "fr": "Choisissez un domaine pour sogo"
-                },
-                "example": "domain.org"
             },
             {
                 "name": "is_public",
