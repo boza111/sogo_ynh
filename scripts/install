@@ -21,17 +21,17 @@ sudo yunohost app checkurl $domain$path -a $app \
 	|| (echo "Path not available: $domain$path" && exit 1)
 
 #Add Repositories 
-echo "deb http://inverse.ca/debian $codename $codename" > sogo.list
+sudo echo "deb http://inverse.ca/debian $codename $codename" > sogo.list
 
 
 #Add Repository Key
 sudo apt-key adv --keyserver keys.gnupg.net --recv-key 0x810273C4
 
 #Update Package Cache
-apt-get update
+sudo apt-get update
 
 #install Sogo
-apt-get install sogo
+sudo apt-get install sogo
 
 
 # If your app use a MySQL database you can use these lines to bootstrap
@@ -41,9 +41,9 @@ apt-get install sogo
  sudo yunohost app setting $app mysqlpwd -v $db_pwd
 
 #Set SOGo Details
-sed -i "s@ADMINUSER@$admin@g" ../conf/sogo.conf
-sed -i "s@DBUSER@$app@g" ../conf/sogo.conf
-sed -i "s@DBPASS@$db_pwd@g" ../conf/sogo.conf
+sudo sed -i "s@ADMINUSER@$admin@g" ../conf/sogo.conf
+sudo sed -i "s@DBUSER@$app@g" ../conf/sogo.conf
+sudo sed -i "s@DBPASS@$db_pwd@g" ../conf/sogo.conf
 
 #Copy SOGo config
 sudo cp ../conf/sogo.conf /etc/sogo/sogo.conf
@@ -63,3 +63,4 @@ fi
 # Restart services
 sudo service nginx reload
 sudo yunohost app ssowatconf
+sudo service sogo restart
