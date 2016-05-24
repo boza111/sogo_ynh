@@ -22,11 +22,11 @@ sudo yunohost app checkurl $domain$path -a $app \
 	|| (echo "Path not available: $domain$path" && exit 1)
 
 #Add Repositories 
-#sudo echo "deb http://inverse.ca/debian $codename $codename" > sogo.list
+sudo echo "deb http://inverse.ca/debian-v3 $codename $codename" > sogo.list
 
 
 #Add Repository Key
-#sudo apt-key adv --keyserver keys.gnupg.net --recv-key 0x810273C4
+sudo apt-key adv --keyserver keys.gnupg.net --recv-key 0x810273C4
 
 #Update Package Cache
 sudo apt-get update
