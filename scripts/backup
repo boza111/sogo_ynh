@@ -1,24 +1,40 @@
 #!/bin/bash
 
-# causes the shell to exit if any subcommand or pipeline returns a non-zero status
-set -e
+#=================================================
+# GENERIC START
+#=================================================
 
-app=sogo
+# Source YunoHost helpers
+source /usr/share/yunohost/helpers
 
-# The parameter $1 is the backup directory location
-# which will be compressed afterward
-backup_dir=$1/apps/$app
-sudo mkdir -p $backup_dir
+# Stop script if errors
+ynh_abort_if_errors
 
-# Backup sources & data
-sudo cp /etc/sogo/sogo.conf $backup_dir/sources
+# Import common cmd
+source ../settings/scripts/experimental_helper.sh
+source ../settings/scripts/_common.sh
 
-# Backup mysql database if needed
- db_pwd=$(sudo yunohost app setting $app mysqlpwd)
- sudo mysqldump -u $app -p$db_pwd $app > $backup_dir/$app.dmp
+domain=$(ynh_app_setting_get $app domain)
+db_name=$(ynh_app_setting_get $app db_name)
 
-# Copy Nginx and YunoHost parameters to make the script "standalone"
-sudo cp -a /etc/yunohost/apps/$app/. $backup_dir/yunohost
-domain=$(sudo yunohost app setting $app domain)
-sudo cp -a /etc/nginx/conf.d/$domain.d/$app.conf $backup_dir/nginx.conf
+#=================================================
+# STANDARD BACKUP STEPS
+#=================================================
 
+# BACKUP THE NGINX CONFIGURATION
+ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf"
+
+# Backup SOGo config
+ynh_backup "/etc/$app"
+
+# Backup stunnel config
+ynh_backup "/etc/stunnel/$app.conf"
+
+# Backup Logs
+ynh_backup "/var/log/$app"
+
+# Backup Cron
+ynh_backup "/etc/cron.d/$app"
+
+# BACKUP THE MYSQL DATABASE
+ynh_mysql_dump_db "$db_name" > db.sql

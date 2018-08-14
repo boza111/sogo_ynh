@@ -1,29 +1,58 @@
 #!/bin/bash
 
-# causes the shell to exit if any subcommand or pipeline returns a non-zero status
-set -e
+#=================================================
+# GENERIC START
+#=================================================
 
-app=sogo
+# Source YunoHost helpers
+source /usr/share/yunohost/helpers
 
-# The parameter $1 is the uncompressed restore directory location
-backup_dir=$1/apps/$app
+# Stop script if errors
+ynh_abort_if_errors
 
-# Restore sources & data
-sudo cp -a $backup_dir/sources/sogo.conf /etc/sogo/sogo.conf
+# Import common cmd
+source ../settings/scripts/experimental_helper.sh
+source ../settings/scripts/_common.sh
 
-# Restore permissions to app files
-# you may need to make some file and/or directory writeable by www-data (nginx user)
-sudo chown -R root:sogo /etc/sogo/sogo.conf
+domain=$(ynh_app_setting_get $app domain)
+path_url=$(ynh_app_setting_get $app path)
+final_path=$(ynh_app_setting_get $app final_path)
+db_name=$(ynh_app_setting_get $app db_name)
 
-# Restore mysql database if needed
- db_pwd=$(sudo yunohost app setting $app mysqlpwd)
- sudo mysql -u $app -p$db_pwd $app < $backup_dir/$app.dmp
+# CHECK IF THE APP CAN BE RESTORED
+ynh_webpath_available $domain $path_url \
+    || ynh_die "Path not available: ${domain}${path_url}"
 
-# Restore Nginx and YunoHost parameters
-sudo cp -a $backup_dir/yunohost/. /etc/yunohost/apps/$app
-domain=$(sudo yunohost app setting $app domain)
-sudo cp -a $backup_dir/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
+#=================================================
+# STANDARD RESTORATION STEPS
+#=================================================
 
-# Restart webserver
-sudo service nginx reload
-sudo service sogo restart
+# Define and install dependencies
+install_dependance
+
+# Restore all config and data
+ynh_restore
+
+# RESTORE THE MYSQL DATABASE
+db_pwd=$(ynh_app_setting_get $app mysqlpwd)
+ynh_mysql_setup_db $db_name $db_name $db_pwd
+ynh_mysql_connect_as $db_name $db_pwd $db_name < ./db.sql
+
+# Enable stunnel at startup
+ynh_replace_string "ENABLED=0" "ENABLED=1" /etc/default/stunnel4
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+
+# SECURE FILES AND DIRECTORIES
+set_permission
+
+# SETUP LOGROTATE
+ynh_use_logrotate /var/log/$app/sogo.log
+
+# Restart services
+systemctl restart sogo
+systemctl restart stunnel4
+systemctl reload nginx
+systemctl restart cron

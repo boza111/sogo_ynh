@@ -1,25 +1,43 @@
 #!/bin/bash
-app=sogo
 
-# Retrieve arguments
-domain=$(sudo yunohost app setting $app domain)
-path=$(sudo yunohost app setting $app path)
-admin=$(sudo yunohost app setting $app admin)
-is_public=$(sudo yunohost app setting $app is_public)
+#=================================================
+# GENERIC START
+#=================================================
 
+# Source YunoHost helpers
+source /usr/share/yunohost/helpers
 
-# Remove configuration files
-sudo rm -f /etc/nginx/conf.d/$domain.d/$app.conf
+# Import common cmd
+source ./experimental_helper.sh
+source ./_common.sh
 
-# If a database is used, remove it
- root_pwd=$(sudo cat /etc/yunohost/mysql)
- mysql -u root -p$root_pwd -e "DROP DATABASE $app ; DROP USER $app@localhost ;"
+# Retrieve app settings
+app=$YNH_APP_INSTANCE_NAME
 
-sudo rm /etc/apt/sources.list.d/sogo.list 
-sudo apt-get update
-sudo apt-get remove sogo
+domain=$(ynh_app_setting_get $app domain)
+port=$(ynh_app_setting_get $app port)
+db_name=$(ynh_app_setting_get $app db_name)
+db_user=$(ynh_app_setting_get $app db_user)
+final_path=$(ynh_app_setting_get $app final_path)
 
+#=================================================
+# STANDARD REMOVE
+#=================================================
 
-# Restart services
-sudo service nginx reload
-sudo yunohost app ssowatconf
+# Remove metapackage and its dependencies
+ynh_remove_app_dependencies
+
+# Remove a database if it exists, along with the associated user
+ynh_mysql_remove_db $db_user $db_name
+
+# Remove the app directory securely
+ynh_secure_remove "$final_path"
+
+# Remove sogo config
+ynh_secure_remove "/etc/$app"
+
+# Remove stunnel config
+ynh_secure_remove "/etc/stunnel/$app.conf"
+
+# Remove the app-specific logrotate config
+ynh_remove_logrotate

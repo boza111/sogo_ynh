@@ -1,70 +1,89 @@
 #!/bin/bash
 
-# causes the shell to exit if any subcommand or pipeline returns a non-zero status
-set -e
+#=================================================
+# GENERIC START
+#=================================================
 
-app=sogo
+# Source YunoHost helpers
+source /usr/share/yunohost/helpers
 
-# Retrieve arguments
-domain=$1
-admin=$2
-is_public=$3
-path="/SOGo"
-codename=$(lsb_release -c -s)
+# Stop script if errors
+ynh_abort_if_errors
 
+# Import common cmd
+source ./experimental_helper.sh
+source ./_common.sh
 
-# Save app settings
-sudo yunohost app setting $app admin -v "$admin"
-sudo yunohost app setting $app is_public -v "$is_public"
+# RETRIEVE ARGUMENTS FROM THE MANIFEST
+domain=$YNH_APP_ARG_DOMAIN
+admin=$YNH_APP_ARG_ADMIN
+is_public=$YNH_APP_ARG_IS_PUBLIC
 
-# Check domain/path availability
-sudo yunohost app checkurl $domain$path -a $app \
-	|| (echo "Path not available: $domain$path" && exit 1)
+# Set variable
+path_url="/SOGo"
+# final_path="/opt/yunohost/$app"
 
-#Add Repositories 
-sudo sh -c 'echo "deb http://inverse.ca/debian-v3 $codename $codename" > sogo.list'
+# STORE SETTINGS FROM MANIFEST
+ynh_app_setting_set $app admin $admin
+ynh_app_setting_set $app is_public $is_public
 
+# Check web path availability
+ynh_webpath_available $domain $path_url || ynh_die "$domain$path_url is not available, please use an other domain or path."
+# Register (book) web path
+ynh_webpath_register $app $domain $path_url
 
-#Add Repository Key
-sudo apt-key adv --keyserver keys.gnupg.net --recv-key 0x810273C4
+# Find a port for SOGo
+port=$(ynh_find_port 20000)
+ynh_app_setting_set $app web_port $port
+smtp_port=$(ynh_find_port $((port+1)))
+ynh_app_setting_set $app smtp_port $smtp_port
 
-#Update Package Cache
-sudo apt-get update
+#=================================================
+# STANDARD MODIFICATIONS
+#=================================================
 
-#install Sogo
-sudo apt-get install sogo --assume-yes
+# INSTALL DEPENDENCIES
+install_dependance
 
+# CREATE A MYSQL DATABASE
+db_name=$(ynh_sanitize_dbid $app)
+db_user=$db_name
+ynh_app_setting_set $app db_name $db_name
+ynh_app_setting_set $app db_user $db_user
+db_pwd=$(ynh_string_random 15)
+ynh_mysql_setup_db $db_name $db_user $db_pwd
 
-# If your app use a MySQL database you can use these lines to bootstrap
-# a database, an associated user and save the password in app settings
- db_pwd=$(openssl rand -hex 15)
- sudo yunohost app initdb $app -p $db_pwd
- sudo yunohost app setting $app mysqlpwd -v $db_pwd
+# Configure SOGO
+config_sogo
 
-#Set SOGo Details
-sudo sed -i "s@ADMINUSER@$admin@g" ../conf/sogo.conf
-sudo sed -i "s@DBUSER@$app@g" ../conf/sogo.conf
-sudo sed -i "s@DBPASS@$db_pwd@g" ../conf/sogo.conf
+# Configure stunnel
+# To fix the issue https://sogo.nu/bugs/view.php?id=31 we need stunnel to be able to connect correctly to the smtp server
+config_stunnel
 
-#Copy SOGo config
-sudo cp ../conf/sogo.conf /etc/sogo/sogo.conf
+# Install crontab
+config_cron
 
 #Configure Nginx
-sudo sed -i "s@VARPATH@$path@g" ../conf/nginx.conf
+config_nginx
 
-#copy Nginx config
-sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
 
+# SECURE FILES AND DIRECTORIES
+set_permission
 
-# If app is public, add url to SSOWat conf as skipped_uris
-if [ "$is_public" = "Yes" ];
-then
-  # unprotected_uris allows SSO credentials to be passed anyway.
-  sudo yunohost app setting $app unprotected_uris -v "/"
+# configure the sso
+if [ "$is_public" = "0" ];
+then	# Retire l'accès public
+    ynh_app_setting_delete $app skipped_uris
+else
+    ynh_app_setting_set $app unprotected_uris "/"
 fi
 
+# SETUP LOGROTATE
+ynh_use_logrotate /var/log/$app/sogo.log
 
 # Restart services
-sudo service nginx reload
-sudo yunohost app ssowatconf
-sudo service sogo restart
+systemctl restart sogo
+systemctl restart stunnel4
