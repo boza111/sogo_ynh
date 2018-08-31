@@ -15,6 +15,9 @@ install_dependance() {
 }
 
 config_sogo() {
+    # Avoid if the directory don't exist
+    mkdir -p /etc/$app
+
     ynh_backup_if_checksum_is_different /etc/$app/sogo.conf
     cp ../conf/sogo.conf /etc/$app/sogo.conf
 
