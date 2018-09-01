@@ -49,7 +49,7 @@ ynh_replace_string "ENABLED=0" "ENABLED=1" /etc/default/stunnel4
 set_permission
 
 # SETUP LOGROTATE
-ynh_use_logrotate /var/log/$app/sogo.log --non-append $app/$app
+ynh_use_logrotate /var/log/$app/sogo.log --non-append
 
 # Restart services
 systemctl restart sogo

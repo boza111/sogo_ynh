@@ -78,7 +78,7 @@ location /Microsoft-Server-ActiveSync/ {
 
 set_permission() {
     chown -R $app:$app /etc/$app
-    chmod u=rwX,g=rwX,o= -R /etc/$app
+    chmod u=rwX,g=rX,o= -R /etc/$app
     chown -R $app:$app /var/log/$app
-    chmod u=rwX,g=rwX,o= -R /var/log/$app
+    chmod u=rwX,g=rX,o= -R /var/log/$app
 }

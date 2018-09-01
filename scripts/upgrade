@@ -105,7 +105,7 @@ else
 fi
 
 # SETUP LOGROTATE
-ynh_use_logrotate /var/log/$app/sogo.log --non-append $app/$app
+ynh_use_logrotate /var/log/$app/sogo.log --non-append
 
 # Restart services
 systemctl restart sogo
