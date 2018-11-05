@@ -1,7 +1,7 @@
 SOGo for Yunohost
 =================
 
-[![Integration level](https://dash.yunohost.org/integration/sogo.svg)](https://ci-apps.yunohost.org/jenkins/job/sogo%20%28Community%29/lastBuild/consoleFull)  
+[![Integration level](https://dash.yunohost.org/integration/sogo.svg)](https://ci-apps.yunohost.org/ci/apps/sogo%20%28Community%29/lastBuild/consoleFull)  
 [![Install sogo with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=sogo)
 
 > *This package allow you to install sogo quickly and simply on a YunoHost server.  
@@ -62,9 +62,9 @@ LDAP and HTTP auth are supported.
 
 ### Supported architectures
 
-* x86-64b - [![Build Status](https://ci-apps.yunohost.org/jenkins/job/sogo%20(Community)/badge/icon)](https://ci-apps.yunohost.org/jenkins/job/sogo%20(Community)/)
-* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/jenkins/job/sogo%20(Community)%20(%7EARM%7E)/badge/icon)](https://ci-apps-arm.yunohost.org/jenkins/job/sogo%20(Community)%20(%7EARM%7E)/)
-* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/jenkins/job/sogo%20(Community)/badge/icon)](https://ci-stretch.nohost.me/jenkins/job/sogo%20(Community)/)
+* x86-64b - [![Build Status](https://ci-apps.yunohost.org/ci/logs/sogo%20(Community).svg)](https://ci-apps.yunohost.org/ci/apps/sogo/)
+* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/ci/logs/sogo%20(Community).svg)](https://ci-apps-arm.yunohost.org/ci/apps/sogo/)
+* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/jenkins/job/sogo%20(Community).svg)](https://ci-stretch.nohost.me/jenkins/job/sogo/)
 
 <!--Limitations
 ------------
