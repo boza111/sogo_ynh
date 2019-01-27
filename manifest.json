@@ -4,7 +4,7 @@
     "packaging_format": 1,
     "license": "LGPL-2.1,GPL-2.0",
     "url": "https://sogo.nu/",
-    "version": "4.0.0~ynh1",
+    "version": "3.2.6-2~ynh1",
     "description": {
         "en": "Sogo is an opensource groupware for E-Mail, Contacts and Calender.",
         "fr": "Sogo est un groupware opensource pour les e-mail, contacts et calendrier" 
