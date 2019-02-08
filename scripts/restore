@@ -48,6 +48,8 @@ ynh_replace_string "ENABLED=0" "ENABLED=1" /etc/default/stunnel4
 # SECURE FILES AND DIRECTORIES
 set_permission
 
+python3 ../settings/scripts/add_sso_conf.py
+
 # SETUP LOGROTATE
 ynh_use_logrotate /var/log/$app/sogo.log --non-append
 

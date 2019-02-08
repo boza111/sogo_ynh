@@ -39,5 +39,8 @@ ynh_secure_remove "/etc/$app"
 # Remove stunnel config
 ynh_secure_remove "/etc/stunnel/$app.conf"
 
+# Remove custom SSO config
+python3 remove_sso_conf.py
+
 # Remove the app-specific logrotate config
 ynh_remove_logrotate

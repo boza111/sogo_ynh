@@ -80,6 +80,7 @@ then	# Retire l'accès public
 else
     ynh_app_setting_set $app unprotected_uris "/"
 fi
+python3 add_sso_conf.py
 
 # SETUP LOGROTATE
 ynh_use_logrotate /var/log/$app/sogo.log --non-append

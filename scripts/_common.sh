@@ -71,16 +71,17 @@ location /Microsoft-Server-ActiveSync/ {
 }
 " >> "$nginx_config_path"
 
-
-    grep "/.well-known/caldav" $nginx_domain_path || echo "location /.well-known/caldav {
+    grep "/.well-known/caldav" $nginx_domain_path || echo "# For Caldav
+location /.well-known/caldav {
     rewrite ^ https://\$server_name/SOGo/dav/;
 }
-    " >> "$nginx_config_path"
+" >> "$nginx_config_path"
 
-    grep "/.well-known/carddav" $nginx_domain_path || echo "location /.well-known/carddav {
+    grep "/.well-known/carddav" $nginx_domain_path || echo "# For Carddav
+location /.well-known/carddav {
     rewrite ^ https://\$server_name/SOGo/dav/;
 }
-    " >> "$nginx_config_path"
+" >> "$nginx_config_path"
 
     ynh_store_file_checksum "$nginx_config_path"
 
