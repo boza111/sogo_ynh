@@ -20,8 +20,7 @@ domain=$YNH_APP_NEW_DOMAIN
 path_url=$(ynh_normalize_url_path ${YNH_APP_NEW_PATH:-'/'})
 app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get $app domain)
-path_url=$(ynh_normalize_url_path $(ynh_app_setting_get $app path))
+port=$(ynh_app_setting_get $app web_port)
 admin=$(ynh_app_setting_get $app admin)
 final_path=$(ynh_app_setting_get $app final_path)
 
