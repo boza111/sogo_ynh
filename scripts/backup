@@ -14,27 +14,36 @@ ynh_abort_if_errors
 source ../settings/scripts/experimental_helper.sh
 source ../settings/scripts/_common.sh
 
-domain=$(ynh_app_setting_get $app domain)
-db_name=$(ynh_app_setting_get $app db_name)
+ynh_script_progression --message="Loading installation settings..."
+
+# retrieve useful param
+domain=$(ynh_app_setting_get --app $app --key domain)
+db_name=$(ynh_app_setting_get --app $app --key db_name)
 
 #=================================================
 # STANDARD BACKUP STEPS
 #=================================================
 
+ynh_script_progression --message="Backing up configuration..."
+
 # BACKUP THE NGINX CONFIGURATION
-ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf"
+ynh_backup --src_path "/etc/nginx/conf.d/$domain.d/$app.conf"
 
 # Backup SOGo config
-ynh_backup "/etc/$app"
+ynh_backup --src_path "/etc/$app"
 
 # Backup stunnel config
-ynh_backup "/etc/stunnel/$app.conf"
-
-# Backup Logs
-ynh_backup "/var/log/$app"
+ynh_backup --src_path "/etc/stunnel/$app.conf"
 
 # Backup Cron
-ynh_backup "/etc/cron.d/$app"
+ynh_backup --src_path "/etc/cron.d/$app"
+
+# Backup Logs
+ynh_script_progression --message="Backing up logs"
+ynh_backup --src_path "/var/log/$app"
 
 # BACKUP THE MYSQL DATABASE
+ynh_script_progression --message="Backing up database"
 ynh_mysql_dump_db "$db_name" > db.sql
+
+ynh_script_progression --message="Backup script completed for $app. (YunoHost will then actually copy those files to the archive)." --last

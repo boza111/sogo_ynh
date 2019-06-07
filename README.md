@@ -62,9 +62,8 @@ LDAP and HTTP auth are supported.
 
 ### Supported architectures
 
-* x86-64b - [![Build Status](https://ci-apps.yunohost.org/ci/logs/sogo%20(Community).svg)](https://ci-apps.yunohost.org/ci/apps/sogo/)
-* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/ci/logs/sogo%20(Community).svg)](https://ci-apps-arm.yunohost.org/ci/apps/sogo/)
-* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/jenkins/job/sogo%20(Community).svg)](https://ci-stretch.nohost.me/jenkins/job/sogo/)
+* x86-64b - [![Build Status](https://ci-apps.yunohost.org/ci/logs/sog%20%28Apps%29.svg)](https://ci-apps.yunohost.org/ci/apps/sogo/)
+* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/ci/logs/sogo%20%28Apps%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/sogo/)
 
 <!--Limitations
 ------------

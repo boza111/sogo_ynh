@@ -14,47 +14,57 @@ ynh_abort_if_errors
 source ../settings/scripts/experimental_helper.sh
 source ../settings/scripts/_common.sh
 
-domain=$(ynh_app_setting_get $app domain)
-path_url=$(ynh_app_setting_get $app path)
-final_path=$(ynh_app_setting_get $app final_path)
-db_name=$(ynh_app_setting_get $app db_name)
+ynh_script_progression --message="Loading settings..."
+
+domain=$(ynh_app_setting_get --app $app --key domain)
+path_url=$(ynh_app_setting_get --app $app --key path)
+final_path=$(ynh_app_setting_get --app $app --key final_path)
+db_name=$(ynh_app_setting_get --app $app --key db_name)
 
 # CHECK IF THE APP CAN BE RESTORED
-ynh_webpath_available $domain $path_url \
-    || ynh_die "Path not available: ${domain}${path_url}"
+ynh_webpath_available --domain $domain --path_url $path_url \
+    || ynh_die --message "Path not available: ${domain}${path_url}"
 
 #=================================================
 # STANDARD RESTORATION STEPS
 #=================================================
 
 # Define and install dependencies
+ynh_script_progression --message="Reinstalling dependencies..." --weight=5
 install_dependance
 
 # Restore all config and data
+ynh_script_progression --message="Restoring files..." --weight=10
 ynh_restore
 
 # RESTORE THE MYSQL DATABASE
-db_pwd=$(ynh_app_setting_get $app mysqlpwd)
-ynh_mysql_setup_db $db_name $db_name $db_pwd
-ynh_mysql_connect_as $db_name $db_pwd $db_name < ./db.sql
+ynh_script_progression --message="Restoring database..." --weight=3
+db_user=$db_name
+db_pwd=$(ynh_app_setting_get --app $app --key mysqlpwd)
+ynh_mysql_setup_db --db_name $db_name --db_user $db_user --db_pwd $db_pwd
+ynh_mysql_connect_as --user $db_user --password $db_pwd --database $db_name < ./db.sql
 
 # Enable stunnel at startup
-ynh_replace_string "ENABLED=0" "ENABLED=1" /etc/default/stunnel4
+ynh_replace_string --match_string "ENABLED=0" --replace_string "ENABLED=1" --target_file /etc/default/stunnel4
 
 #=================================================
 # GENERIC FINALIZATION
 #=================================================
 
 # SECURE FILES AND DIRECTORIES
+ynh_script_progression --message="Protecting directory..."
 set_permission
 
 python3 ../settings/scripts/add_sso_conf.py
 
 # SETUP LOGROTATE
-ynh_use_logrotate /var/log/$app/sogo.log --non-append
+ynh_use_logrotate --logfile /var/log/$app/sogo.log --non-append
 
 # Restart services
+ynh_script_progression --message="Starting SOGo services..." --weight=3
 systemctl restart sogo
 systemctl restart stunnel4
 systemctl reload nginx
 systemctl restart cron
+
+ynh_script_progression --message="Restoration completed for $app" --last

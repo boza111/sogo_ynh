@@ -14,6 +14,8 @@ ynh_abort_if_errors
 source ./experimental_helper.sh
 source ./_common.sh
 
+ynh_script_progression --message="Validating installation parameters..."
+
 # RETRIEVE ARGUMENTS FROM THE MANIFEST
 domain=$YNH_APP_ARG_DOMAIN
 admin=$YNH_APP_ARG_ADMIN
@@ -23,35 +25,38 @@ is_public=$YNH_APP_ARG_IS_PUBLIC
 path_url="/SOGo"
 # final_path="/opt/yunohost/$app"
 
-# STORE SETTINGS FROM MANIFEST
-ynh_app_setting_set $app admin $admin
-ynh_app_setting_set $app is_public $is_public
-
-# Check web path availability
-ynh_webpath_available $domain $path_url || ynh_die "$domain$path_url is not available, please use an other domain or path."
 # Register (book) web path
-ynh_webpath_register $app $domain $path_url
+ynh_webpath_register --app $app --domain $domain --path_url $path_url
 
 # Find a port for SOGo
-port=$(ynh_find_port 20000)
-ynh_app_setting_set $app web_port $port
-smtp_port=$(ynh_find_port $((port+1)))
-ynh_app_setting_set $app smtp_port $smtp_port
+ynh_script_progression --message="Finding available ports..."
+port=$(ynh_find_port --port 20000)
+smtp_port=$(ynh_find_port --port $((port+1)))
+
+# STORE SETTINGS FROM MANIFEST
+ynh_script_progression --message="Storing installation settings..."
+ynh_app_setting_set --app $app --key admin --value $admin
+ynh_app_setting_set --app $app --key is_public --value $is_public
+ynh_app_setting_set --app $app --key smtp_port --value $smtp_port
+ynh_app_setting_set --app $app --key web_port --value $port
 
 #=================================================
 # STANDARD MODIFICATIONS
 #=================================================
 
 # INSTALL DEPENDENCIES
+ynh_script_progression --message="Installing dependencies..." --weight=7
 install_dependance
 
 # CREATE A MYSQL DATABASE
+ynh_script_progression --message="Configuring MySQL database..."
 db_name=$(ynh_sanitize_dbid $app)
 db_user=$db_name
-ynh_app_setting_set $app db_name $db_name
-ynh_app_setting_set $app db_user $db_user
-db_pwd=$(ynh_string_random 15)
-ynh_mysql_setup_db $db_name $db_user $db_pwd
+ynh_app_setting_set --app $app --key db_name --value $db_name
+ynh_app_setting_set --app $app --key db_user --value $db_user
+ynh_mysql_setup_db --db_name $db_name --db_user $db_user
+
+ynh_script_progression --message="Configuring application..." --weight=3
 
 # Configure SOGO
 config_sogo
@@ -64,6 +69,7 @@ config_stunnel
 config_cron
 
 #Configure Nginx
+ynh_script_progression --message="Configuring nginx..." --weight=1
 config_nginx
 
 #=================================================
@@ -71,20 +77,26 @@ config_nginx
 #=================================================
 
 # SECURE FILES AND DIRECTORIES
+ynh_script_progression --message="Protecting directory..."
 set_permission
 
 # configure the sso
+ynh_script_progression --message="Configuring permissions..."
 if [ "$is_public" = "0" ];
 then	# Retire l'accès public
-    ynh_app_setting_delete $app skipped_uris
+    ynh_app_setting_delete --app $app --key skipped_uris
 else
-    ynh_app_setting_set $app unprotected_uris "/"
+    ynh_app_setting_set --app $app --key unprotected_uris --value "/"
 fi
 python3 add_sso_conf.py
 
 # SETUP LOGROTATE
-ynh_use_logrotate /var/log/$app/sogo.log --non-append
+ynh_script_progression --message="Configuring log rotation..."
+ynh_use_logrotate --logfile /var/log/$app/sogo.log --non-append
 
 # Restart services
+ynh_script_progression --message="Starting sogo services..." --weight=3
 systemctl restart sogo
 systemctl restart stunnel4
+
+ynh_script_progression --message="Installation of $app completed" --last

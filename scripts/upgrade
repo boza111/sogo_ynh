@@ -14,16 +14,18 @@ ynh_abort_if_errors
 source ./experimental_helper.sh
 source ./_common.sh
 
+ynh_script_progression --message="Loading installation settings..."
+
 # LOAD SETTINGS
-domain=$(ynh_app_setting_get $app domain)
-path_url=$(ynh_normalize_url_path $(ynh_app_setting_get $app path))
-admin=$(ynh_app_setting_get $app admin)
-is_public=$(ynh_app_setting_get $app is_public)
-port=$(ynh_app_setting_get $app web_port)
-smtp_port=$(ynh_app_setting_get $app smtp_port)
-db_name=$(ynh_app_setting_get $app db_name)
-db_user=$(ynh_app_setting_get $app db_user)
-db_pwd=$(ynh_app_setting_get $app mysqlpwd)
+domain=$(ynh_app_setting_get --app $app --key domain)
+path_url=$(ynh_normalize_url_path --path_url $(ynh_app_setting_get --app $app --key path))
+admin=$(ynh_app_setting_get --app $app --key admin)
+is_public=$(ynh_app_setting_get --app $app --key is_public)
+port=$(ynh_app_setting_get --app $app --key web_port)
+smtp_port=$(ynh_app_setting_get --app $app --key smtp_port)
+db_name=$(ynh_app_setting_get --app $app --key db_name)
+db_user=$(ynh_app_setting_get --app $app --key db_user)
+db_pwd=$(ynh_app_setting_get --app $app --key mysqlpwd)
 
 # Backup the current version of the app
 ynh_backup_before_upgrade
@@ -39,35 +41,37 @@ ynh_abort_if_errors
 # UPGRADE SETTINGS FROM OLD INSTALL
 #=================================================
 
+ynh_script_progression --message="Fixing old settings..." --weight=1
+
 if [[ ${is_public,,*} = "yes" ]]
 then
     is_public=1
-    ynh_app_setting_set $app is_public 1
+    ynh_app_setting_set --app $app --key is_public --value 1
 fi
 
 if [[ ${is_public,,*} = "no" ]]
 then
     is_public=0
-    ynh_app_setting_set $app is_public 0
+    ynh_app_setting_set --app $app --key is_public --value 0
 fi
 
 if [[ -z $port ]]
 then
     # Find a port for SOGo
-    port=$(ynh_find_port 20000)
-    ynh_app_setting_set $app web_port $port
+    port=$(ynh_find_port --port 20000)
+    ynh_app_setting_set --app $app --key web_port --value $port
 fi
 
 if [[ -z $db_name ]]
 then
     db_name=$app
-    ynh_app_setting_set $app db_name $db_name
+    ynh_app_setting_set --app $app --key db_name --value $db_name
 fi
 
 if [[ -z $db_user ]]
 then
     db_user=$app
-    ynh_app_setting_set $app db_user $db_user
+    ynh_app_setting_set --app $app --key db_user --value $db_user
 fi
 
 #=================================================
@@ -75,7 +79,10 @@ fi
 #=================================================
 
 # INSTALL DEPENDENCIES
+ynh_script_progression --message="Upgrading dependencies..."
 install_dependance
+
+ynh_script_progression --message="Configuring application..."
 
 # Configure SOGO
 config_sogo
@@ -94,20 +101,26 @@ config_nginx
 #=================================================
 
 # SECURE FILES AND DIRECTORIES
+ynh_script_progression --message="Protecting directory..."
 set_permission
 
 # configure the sso
+ynh_script_progression --message="Configuring permissions..."
 if [ "$is_public" = "0" ];
 then	# Retire l'accès public
-    ynh_app_setting_delete $app skipped_uris
+    ynh_app_setting_delete --app $app --key skipped_uris
 else
-    ynh_app_setting_set $app unprotected_uris "/"
+    ynh_app_setting_set --app $app --key unprotected_uris --value "/"
 fi
 python3 add_sso_conf.py
 
 # SETUP LOGROTATE
-ynh_use_logrotate /var/log/$app/sogo.log --non-append
+ynh_script_progression --message="Configuring log rotation..."
+ynh_use_logrotate --logfile /var/log/$app/sogo.log --non-append
 
 # Restart services
+ynh_script_progression --message="Starting SOGo services..." --weight=3
 systemctl restart sogo
 systemctl restart stunnel4
+
+ynh_script_progression --message="Upgrade of $app completed" --last
