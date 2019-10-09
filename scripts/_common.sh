@@ -11,7 +11,7 @@ app=$YNH_APP_INSTANCE_NAME
 #=================================================
 
 install_dependance() {
-    ynh_install_app_dependencies sogo stunnel4
+    ynh_install_app_dependencies sogo stunnel4 memcached
 }
 
 config_sogo() {
