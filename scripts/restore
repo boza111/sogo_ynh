@@ -58,7 +58,7 @@ set_permission
 python3 ../settings/scripts/add_sso_conf.py
 
 # SETUP LOGROTATE
-ynh_use_logrotate --logfile /var/log/$app/sogo.log --non-append
+ynh_use_logrotate --logfile /var/log/$app/sogo.log --nonappend
 
 # Restart services
 ynh_script_progression --message="Starting SOGo services..." --weight=3

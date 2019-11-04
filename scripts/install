@@ -92,7 +92,7 @@ python3 add_sso_conf.py
 
 # SETUP LOGROTATE
 ynh_script_progression --message="Configuring log rotation..."
-ynh_use_logrotate --logfile /var/log/$app/sogo.log --non-append
+ynh_use_logrotate --logfile /var/log/$app/sogo.log --nonappend
 
 # Restart services
 ynh_script_progression --message="Starting sogo services..." --weight=3
