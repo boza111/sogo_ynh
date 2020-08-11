@@ -94,6 +94,9 @@ python3 add_sso_conf.py
 ynh_script_progression --message="Configuring log rotation..."
 ynh_use_logrotate --logfile /var/log/$app/sogo.log --nonappend
 
+# Register service
+yunohost service add $app --log "/var/log/$app/sogo.log"
+
 # Restart services
 ynh_script_progression --message="Starting sogo services..." --weight=3
 systemctl restart sogo

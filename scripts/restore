@@ -60,6 +60,9 @@ python3 ../settings/scripts/add_sso_conf.py
 # SETUP LOGROTATE
 ynh_use_logrotate --logfile /var/log/$app/sogo.log --nonappend
 
+# Register service
+yunohost service add $app --log "/var/log/$app/sogo.log"
+
 # Restart services
 ynh_script_progression --message="Starting SOGo services..." --weight=3
 systemctl restart sogo
