@@ -6,8 +6,8 @@
     "url": "https://sogo.nu/",
     "version": "4.0.7-1~ynh1",
     "description": {
-        "en": "Sogo is an opensource groupware for E-Mail, Contacts and Calender.",
-        "fr": "Sogo est un groupware opensource pour les e-mail, contacts et calendrier" 
+        "en": "An opensource groupware for E-Mail, Contacts and Calender.",
+        "fr": "Un groupware opensource pour les e-mail, contacts et calendrier" 
     },
     "maintainer": {
         "name": "Josué Tille",
