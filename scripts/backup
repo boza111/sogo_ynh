@@ -14,9 +14,6 @@ source /usr/share/yunohost/helpers
 # Stop script if errors
 ynh_abort_if_errors
 
-#=================================================
-# LOAD SETTINGS
-#=================================================
 ynh_print_info --message="Loading installation settings..."
 
 # retrieve useful param
@@ -24,47 +21,29 @@ domain=$(ynh_app_setting_get --app $app --key domain)
 db_name=$(ynh_app_setting_get --app $app --key db_name)
 
 #=================================================
-# DECLARE DATA AND CONF FILES TO BACKUP
+# STANDARD BACKUP STEPS
 #=================================================
-ynh_print_info --message="Declaring files to be backed up..."
 
-#=================================================
+ynh_print_info --message="Backing up configuration..."
+
 # BACKUP THE NGINX CONFIGURATION
-#=================================================
+ynh_backup --src_path "/etc/nginx/conf.d/$domain.d/$app.conf"
 
-ynh_backup --src_path="/etc/nginx/conf.d/$domain.d/$app.conf"
+# Backup SOGo config
+ynh_backup --src_path "/etc/$app"
 
-#=================================================
-# BACKUP SOGO CONFIG
-#=================================================
-
-ynh_backup --src_path="/etc/$app"
-
-#=================================================
-# BACKUP STUNNEL CONFIG
-#=================================================
-
-ynh_backup --src_path="/etc/stunnel/$app.conf"
-
-#=================================================
-# BACKUP VARIOUS FILES
-#=================================================
+# Backup stunnel config
+ynh_backup --src_path "/etc/stunnel/$app.conf"
 
 # Backup Cron
-ynh_backup --src_path="/etc/cron.d/$app"
+ynh_backup --src_path "/etc/cron.d/$app"
 
 # Backup Logs
-ynh_backup --src_path="/var/log/$app"
+ynh_print_info --message="Backing up logs"
+ynh_backup --src_path "/var/log/$app"
 
-#=================================================
 # BACKUP THE MYSQL DATABASE
-#=================================================
 ynh_print_info --message="Backing up database"
-
 ynh_mysql_dump_db "$db_name" > db.sql
-
-#=================================================
-# END OF SCRIPT
-#=================================================
 
 ynh_print_info --message="Backup script completed for $app. (YunoHost will then actually copy those files to the archive)."

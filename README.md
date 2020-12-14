@@ -2,7 +2,7 @@ SOGo for Yunohost
 =================
 
 [![Integration level](https://dash.yunohost.org/integration/sogo.svg)](https://dash.yunohost.org/appci/app/sogo) ![](https://ci-apps.yunohost.org/ci/badges/sogo.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/sogo.maintain.svg)  
-[![Install sogo with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=sogo)
+[![Install sogo with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=sogo)
 
 > *This package allow you to install sogo quickly and simply on a YunoHost server.  
 If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to know how to install and enjoy it.*
