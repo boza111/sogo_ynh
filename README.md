@@ -12,7 +12,7 @@ Overview
 
 SOGo is an opensource groupware solution which has Webmail, a global address book and Calender and Contacts which can be synced via caldav or cardav.
 
-**Shipped version:** 3.2.6-2
+**Shipped version:** 4.0.7-1
 
 Screenshots
 -----------
