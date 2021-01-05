@@ -14,7 +14,7 @@ source /usr/share/yunohost/helpers
 # Stop script if errors
 ynh_abort_if_errors
 
-ynh_script_progression --message="Loading installation settings..."
+ynh_print_info --message="Loading installation settings..."
 
 # retrieve useful param
 domain=$(ynh_app_setting_get --app $app --key domain)
@@ -24,7 +24,7 @@ db_name=$(ynh_app_setting_get --app $app --key db_name)
 # STANDARD BACKUP STEPS
 #=================================================
 
-ynh_script_progression --message="Backing up configuration..."
+ynh_print_info --message="Backing up configuration..."
 
 # BACKUP THE NGINX CONFIGURATION
 ynh_backup --src_path "/etc/nginx/conf.d/$domain.d/$app.conf"
@@ -39,11 +39,11 @@ ynh_backup --src_path "/etc/stunnel/$app.conf"
 ynh_backup --src_path "/etc/cron.d/$app"
 
 # Backup Logs
-ynh_script_progression --message="Backing up logs"
+ynh_print_info --message="Backing up logs"
 ynh_backup --src_path "/var/log/$app"
 
 # BACKUP THE MYSQL DATABASE
-ynh_script_progression --message="Backing up database"
+ynh_print_info --message="Backing up database"
 ynh_mysql_dump_db "$db_name" > db.sql
 
-ynh_script_progression --message="Backup script completed for $app. (YunoHost will then actually copy those files to the archive)." --last
+ynh_print_info --message="Backup script completed for $app. (YunoHost will then actually copy those files to the archive)."
