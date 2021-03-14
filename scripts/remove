@@ -48,9 +48,6 @@ ynh_secure_remove --file="/etc/$app"
 # Remove stunnel config
 ynh_secure_remove --file="/etc/stunnel/$app.conf"
 
-# Remove custom SSO config
-python3 remove_sso_conf.py
-
 # Remove service
 yunohost service remove $app
 

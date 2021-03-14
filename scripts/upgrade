@@ -97,7 +97,7 @@ install_dependance
 ynh_script_progression --message="Configuring application..."
 
 # Configure SOGO
-config_sogo
+ynh_add_config --template="sogo.conf" --destination="/etc/$app/sogo.conf"
 
 # Configure stunnel
 config_stunnel
@@ -118,13 +118,18 @@ set_permission
 
 # configure the sso
 ynh_script_progression --message="Configuring permissions..."
-if [ "$is_public" = "0" ];
-then	# Retire l'accès public
-    ynh_app_setting_delete --app $app --key skipped_uris
+
+if ! ynh_permission_exists --permission sync_client; then
+    ynh_permission_create --permission="sync_client" --allowed 'visitors' --auth_header=false\
+        --label="Sync client" --protected=true --show_tile=false\
+        --additional_urls="/Microsoft-Server-ActiveSync" "/principals" "/.well-known/caldav" "/.well-known/carddav"
+    python3 remove_sso_conf_persistent.py $domain \
+        || ynh_print_warn --message="Your file /etc/ssowat/""conf.json.persistent doesn't respect the json syntax. The config file wasn't cleaned. Please clean it manually."
 else
-    ynh_app_setting_set --app $app --key unprotected_uris --value "/"
+    ynh_permission_update --permission="sync_client" --add='visitors' --label="Sync client" --protected=true --show_tile=false
+    ynh_permission_url  --permission "sync_client" --auth_header=false\
+        --add_url="/Microsoft-Server-ActiveSync" "/principals" "/.well-known/caldav" "/.well-known/carddav"
 fi
-python3 add_sso_conf.py
 
 # SETUP LOGROTATE
 ynh_script_progression --message="Configuring log rotation..."
