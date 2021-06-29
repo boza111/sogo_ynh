@@ -45,6 +45,11 @@ ynh_secure_remove --file="/etc/$app"
 # Remove stunnel config
 ynh_secure_remove --file="/etc/stunnel/$app.conf"
 
+# Remove nginx config
+ynh_script_progression --message="Removing nginx configuration..."
+ynh_remove_nginx_config
+
+
 # Remove service
 yunohost service remove $app
 
