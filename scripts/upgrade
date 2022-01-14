@@ -3,36 +3,45 @@
 #=================================================
 # GENERIC START
 #=================================================
-
-# Import common cmd
-source ./experimental_helper.sh
-source ./_common.sh
-
 # IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
 source /usr/share/yunohost/helpers
 
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
-
-ynh_script_progression --message="Loading installation settings..."
-
+#=================================================
 # LOAD SETTINGS
-domain=$(ynh_app_setting_get --app $app --key domain)
-path_url=$(ynh_normalize_url_path --path_url $(ynh_app_setting_get --app $app --key path))
-admin=$(ynh_app_setting_get --app $app --key admin)
-is_public=$(ynh_app_setting_get --app $app --key is_public)
-port=$(ynh_app_setting_get --app $app --key web_port)
-smtp_port=$(ynh_app_setting_get --app $app --key smtp_port)
-db_name=$(ynh_app_setting_get --app $app --key db_name)
-db_user=$(ynh_app_setting_get --app $app --key db_user)
-db_pwd=$(ynh_app_setting_get --app $app --key mysqlpwd)
+#=================================================
+ynh_script_progression --message="Loading installation settings..." --weight=1
+
+app=$YNH_APP_INSTANCE_NAME
+
+domain=$(ynh_app_setting_get --app=$app --key=domain)
+path_url=$(ynh_app_setting_get --app=$app --key=path)
+admin=$(ynh_app_setting_get --app=$app --key=admin)
+is_public=$(ynh_app_setting_get --app=$app --key=is_public)
+port=$(ynh_app_setting_get --app=$app --key=web_port)
+smtp_port=$(ynh_app_setting_get --app=$app --key=smtp_port)
+db_name=$(ynh_app_setting_get --app=$app --key=db_name)
+db_user=$db_name
+db_pwd=$(ynh_app_setting_get --app=$app --key=mysqlpwd)
+
+#=================================================
+# CHECK VERSION
+#=================================================
+
+upgrade_type=$(ynh_check_app_version_changed)
+
+#=================================================
+# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
+#=================================================
+ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=1
 
 # Backup the current version of the app
 ynh_backup_before_upgrade
-
 ynh_clean_setup () {
-	# restore it if the upgrade fails
-	ynh_restore_upgradebackup
+    # Restore it if the upgrade fails
+    ynh_restore_upgradebackup
 }
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
@@ -140,7 +149,12 @@ yunohost service add $app --log "/var/log/$app/sogo.log"
 
 # Restart services
 ynh_script_progression --message="Starting SOGo services..." --weight=3
+
 systemctl restart sogo
 systemctl restart stunnel4
+
+#=================================================
+# END OF SCRIPT
+#=================================================
 
 ynh_script_progression --message="Upgrade of $app completed" --last

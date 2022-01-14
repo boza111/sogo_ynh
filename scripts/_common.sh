@@ -6,6 +6,9 @@
 
 app=$YNH_APP_INSTANCE_NAME
 
+# dependencies used by the app
+pkg_dependencies="sogo stunnel4 memcached"
+
 #=================================================
 # DEFINE ALL COMMON FONCTIONS
 #=================================================

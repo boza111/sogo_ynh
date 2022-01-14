@@ -5,7 +5,6 @@
 #=================================================
 
 # Import common cmd
-source ../settings/scripts/experimental_helper.sh
 source ../settings/scripts/_common.sh
 
 # Source YunoHost helpers
