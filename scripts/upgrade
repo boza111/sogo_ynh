@@ -92,7 +92,7 @@ ynh_install_app_dependencies $pkg_dependencies
 #=================================================
 # UPDATE A CONFIG FILE
 #=================================================
-ynh_script_progression --message="Configuring application..."
+ynh_script_progression --message="Configuring application..." --weight=1
 
 # Configure SOGO
 ynh_add_config --template="../conf/sogo.conf" --destination="/etc/$app/sogo.conf"
