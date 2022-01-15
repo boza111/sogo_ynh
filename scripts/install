@@ -39,7 +39,7 @@ ynh_script_progression --message="Validating installation parameters..." --weigh
 path_url="/SOGo"
 
 # Register (book) web path
-ynh_webpath_register --app $app --domain $domain --path_url $path_url
+ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
 
 #=================================================
 # STORE SETTINGS FROM MANIFEST
