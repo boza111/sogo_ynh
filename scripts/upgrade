@@ -134,12 +134,16 @@ ynh_script_progression --message="Upgrading NGINX web server configuration..." -
 config_nginx
 
 #=================================================
-# GENERIC FINALIZATION
-#=================================================
-
 # SECURE FILES AND DIRECTORIES
-ynh_script_progression --message="Protecting directory..."
-set_permission
+#=================================================
+ynh_script_progression --message="Protecting directory..." --weight=1
+
+chown -R $app:$app /etc/$app
+chmod u=rwX,g=rX,o= -R /etc/$app
+chown -R $app:$app /var/log/$app
+chmod u=rwX,g=rX,o= -R /var/log/$app
+
+
 
 # configure the sso
 ynh_script_progression --message="Configuring permissions..."
@@ -161,7 +165,7 @@ fi
 #=================================================
 # SETUP LOGROTATE
 #=================================================
-ynh_script_progression --message="Upgrading logrotate configuration..." --time --weight=1
+ynh_script_progression --message="Upgrading logrotate configuration..." --weight=1
 
 # Use logrotate to manage app-specific logfile(s)
 ynh_use_logrotate --non-append
