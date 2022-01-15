@@ -120,9 +120,11 @@ ynh_add_config --template="../conf/cron" --destination="/etc/cron.d/$app"
 chown root: "/etc/cron.d/$app"
 chmod 644 "/etc/cron.d/$app"
 
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=1
 
-
-#Configure Nginx
 config_nginx
 
 #=================================================
@@ -148,9 +150,15 @@ else
         --add_url="/Microsoft-Server-ActiveSync" "/principals" "/.well-known/caldav" "/.well-known/carddav"
 fi
 
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
 # SETUP LOGROTATE
-ynh_script_progression --message="Configuring log rotation..."
-ynh_use_logrotate --logfile /var/log/$app/sogo.log --nonappend
+#=================================================
+ynh_script_progression --message="Upgrading logrotate configuration..." --time --weight=1
+
+# Use logrotate to manage app-specific logfile(s)
+ynh_use_logrotate --non-append
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
