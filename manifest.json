@@ -6,7 +6,7 @@
         "en": "Opensource groupware for E-Mail, Contacts and Calender",
         "fr": "Groupware opensource pour les e-mail, contacts et calendrier" 
     },
-    "version": "5.4.0~ynh1",
+    "version": "5.0.1~ynh1",
     "url": "https://sogo.nu/",
     "upstream": {
         "license": "LGPL-2.1,GPL-2.0",
