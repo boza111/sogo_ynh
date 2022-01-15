@@ -11,10 +11,6 @@ pkg_dependencies="sogo stunnel4 memcached"
 # DEFINE ALL COMMON FONCTIONS
 #=================================================
 
-install_dependance() {
-    ynh_install_app_dependencies sogo stunnel4 memcached
-}
-
 config_stunnel() {
     ynh_add_config --template="stunnel.conf" --destination="/etc/stunnel/$app.conf"
 
