@@ -49,36 +49,20 @@ ynh_abort_if_errors
 #=================================================
 # UPGRADE SETTINGS FROM OLD INSTALL
 #=================================================
+ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
 
-ynh_script_progression --message="Fixing old settings..." --weight=1
-
-if [[ ${is_public,,*} = "yes" ]]
-then
-    is_public=1
-    ynh_app_setting_set --app $app --key is_public --value 1
-fi
-
-if [[ ${is_public,,*} = "no" ]]
-then
-    is_public=0
-    ynh_app_setting_set --app $app --key is_public --value 0
-fi
-
-if [[ -z $port ]]
-then
+if [[ -z $port ]]; then
     # Find a port for SOGo
-    port=$(ynh_find_port --port 20000)
+    port=$(ynh_find_port --port=20000)
     ynh_app_setting_set --app=$app --key=web_port --value=$port
 fi
 
-if [[ -z $db_name ]]
-then
+if [[ -z $db_name ]]; then
     db_name=$app
     ynh_app_setting_set --app=$app --key=db_name --value=$db_name
 fi
 
-if [[ -z $db_user ]]
-then
+if [[ -z $db_user ]]; then
     db_user=$app
     ynh_app_setting_set --app=$app --key=db_user --value=$db_user
 fi
