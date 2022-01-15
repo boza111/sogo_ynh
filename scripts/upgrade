@@ -99,7 +99,10 @@ ynh_script_progression --message="Configuring application..."
 ynh_add_config --template="../conf/sogo.conf" --destination="/etc/$app/sogo.conf"
 
 # Configure stunnel
-config_stunnel
+ynh_add_config --template="../conf/stunnel.conf" --destination="/etc/stunnel/$app.conf"
+
+# Enable stunnel at startup
+ynh_replace_string --match_string="ENABLED=0" --replace_string="ENABLED=1" --target_file="/etc/default/stunnel4"
 
 #=================================================
 # SETUP A CRON
