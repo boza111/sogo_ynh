@@ -82,11 +82,14 @@ db_user=$db_name
 ynh_app_setting_set --app=$app --key=db_name --value=$db_name
 ynh_mysql_setup_db --db_user=$db_user --db_name=$db_name
 
+#=================================================
+# ADD A CONFIGURATION
+#=================================================
 ynh_script_progression --message="Configuring application..." --weight=3
 
 # Configure SOGO
 mkdir -p /etc/$app
-ynh_add_config --template="sogo.conf" --destination="/etc/$app/sogo.conf"
+ynh_add_config --template="../conf/sogo.conf" --destination="/etc/$app/sogo.conf"
 
 # Configure stunnel
 # To fix the issue https://sogo.nu/bugs/view.php?id=31 we need stunnel to be able to connect correctly to the smtp server
