@@ -121,6 +121,7 @@ chown root: "/etc/cron.d/$app"
 chmod 644 "/etc/cron.d/$app"
 
 
+
 #Configure Nginx
 config_nginx
 
@@ -151,14 +152,27 @@ fi
 ynh_script_progression --message="Configuring log rotation..."
 ynh_use_logrotate --logfile /var/log/$app/sogo.log --nonappend
 
-# Register service
-yunohost service add $app --log "/var/log/$app/sogo.log"
+#=================================================
+# INTEGRATE SERVICE IN YUNOHOST
+#=================================================
+ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
-# Restart services
-ynh_script_progression --message="Starting SOGo services..." --weight=3
+yunohost service add $app --description="Groupware for E-Mail, Contacts and Calender" --log="/var/log/$app/$app.log"
 
-systemctl restart sogo
-systemctl restart stunnel4
+#=================================================
+# START SYSTEMD SERVICE
+#=================================================
+ynh_script_progression --message="Starting a systemd service..." --weight=1
+
+ynh_systemd_action --service_name=$app --action="restart" --log_path="systemd"
+ynh_systemd_action --service_name=stunnel4 --action="restart" --log_path="systemd"
+
+#=================================================
+# RELOAD NGINX
+#=================================================
+ynh_script_progression --message="Reloading NGINX web server..." --weight=1
+
+ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT
