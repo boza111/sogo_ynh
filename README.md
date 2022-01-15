@@ -17,7 +17,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 Opensource groupware for E-Mail, Contacts and Calender
 
-**Shipped version:** 5.4.0~ynh1
+**Shipped version:** 5.0.1~ynh1
 
 **Demo:** https://demo.sogo.nu/SOGo/
 

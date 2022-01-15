@@ -13,7 +13,7 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
 
 Groupware opensource pour les e-mail, contacts et calendrier
 
-**Version incluse :** 5.4.0~ynh1
+**Version incluse :** 5.0.1~ynh1
 
 **Démo :** https://demo.sogo.nu/SOGo/
 
