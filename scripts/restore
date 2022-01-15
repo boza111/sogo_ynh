@@ -49,7 +49,6 @@ ynh_script_progression --message="Reinstalling dependencies..." --weight=1
 # Define and install dependencies
 ynh_install_app_dependencies $pkg_dependencies
 
-
 # Restore all config and data
 ynh_script_progression --message="Restoring files..." --weight=10
 
