@@ -92,8 +92,14 @@ ynh_add_config --template="sogo.conf" --destination="/etc/$app/sogo.conf"
 # To fix the issue https://sogo.nu/bugs/view.php?id=31 we need stunnel to be able to connect correctly to the smtp server
 config_stunnel
 
-# Install crontab
-config_cron
+#=================================================
+# SETUP A CRON
+#=================================================
+ynh_script_progression --message="Setuping a cron..." --weight=1
+
+ynh_add_config --template="../conf/cron" --destination="/etc/cron.d/$app"
+chown root: "/etc/cron.d/$app"
+chmod 644 "/etc/cron.d/$app"
 
 #=================================================
 # NGINX CONFIGURATION
@@ -137,7 +143,7 @@ ynh_permission_create --permission="sync_client" --allowed='visitors' --auth_hea
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
-yunohost service add $app --description="A short description of the app" --log="/var/log/$app/$app.log"
+yunohost service add $app --description="Groupware for E-Mail, Contacts and Calender" --log="/var/log/$app/$app.log"
 
 #=================================================
 # START SYSTEMD SERVICE
