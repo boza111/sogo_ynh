@@ -134,9 +134,9 @@ ynh_use_logrotate --logfile /var/log/$app/sogo.log --nonappend
 #=================================================
 ynh_script_progression --message="Configuring permissions..." --weight=1
 
-if [ "$is_public" == '1' ];
+if [ $is_public -eq 1 ]
 then
-    ynh_permission_update --permission "main" --add "visitors"
+    ynh_permission_update --permission="main" --add="visitors"
 fi
 
 ynh_permission_create --permission="sync_client" --allowed='visitors' --auth_header=false\

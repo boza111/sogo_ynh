@@ -83,6 +83,20 @@ then
     ynh_app_setting_set --app=$app --key=db_user --value=$db_user
 fi
 
+# Cleaning legacy permissions
+if ynh_legacy_permissions_exists; then
+    ynh_legacy_permissions_delete_all
+
+    ynh_app_setting_delete --app=$app --key=is_public
+fi
+
+if ! ynh_permission_exists --permission="sync_client"; then
+    # Create the required permissions
+    ynh_permission_create --permission="sync_client" --allowed='visitors' --auth_header=false\
+    --label="Sync client" --protected=true --show_tile=false\
+    --additional_urls="/Microsoft-Server-ActiveSync" "/principals" "/.well-known/caldav" "/.well-known/carddav"
+fi
+
 #=================================================
 # STANDARD MODIFICATIONS
 #=================================================
