@@ -94,7 +94,7 @@ ynh_add_config --template="../conf/sogo.conf" --destination="/etc/$app/sogo.conf
 ynh_add_config --template="../conf/stunnel.conf" --destination="/etc/stunnel/$app.conf"
 
 # Enable stunnel at startup
-ynh_replace_string --match_string "ENABLED=0" --replace_string "ENABLED=1" --target_file /etc/default/stunnel4
+ynh_replace_string --match_string="ENABLED=0" --replace_string="ENABLED=1" --target_file="/etc/default/stunnel4"
 
 #=================================================
 # SETUP A CRON
@@ -129,7 +129,7 @@ chmod u=rwX,g=rX,o= -R /var/log/$app
 #=================================================
 ynh_script_progression --message="Configuring log rotation..." --weight=1
 
-ynh_use_logrotate --logfile /var/log/$app/sogo.log --nonappend
+ynh_use_logrotate --logfile="/var/log/$app/sogo.log" --nonappend
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
