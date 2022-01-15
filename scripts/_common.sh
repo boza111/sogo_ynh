@@ -18,11 +18,6 @@ config_stunnel() {
     ynh_replace_string --match_string "ENABLED=0" --replace_string "ENABLED=1" --target_file /etc/default/stunnel4
 }
 
-config_cron() {
-    ynh_add_config --template="cron" --destination="/etc/cron.d/$app"
-    systemctl restart cron
-}
-
 config_nginx() {
     ynh_add_nginx_config
 

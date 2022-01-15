@@ -130,6 +130,21 @@ ynh_script_progression --message="Configuring log rotation..." --weight=1
 ynh_use_logrotate --logfile /var/log/$app/sogo.log --nonappend
 
 #=================================================
+# INTEGRATE SERVICE IN YUNOHOST
+#=================================================
+ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
+
+yunohost service add $app --description="Groupware for E-Mail, Contacts and Calender" --log="/var/log/$app/$app.log"
+
+#=================================================
+# START SYSTEMD SERVICE
+#=================================================
+ynh_script_progression --message="Starting a systemd service..." --weight=1
+
+ynh_systemd_action --service_name=$app --action="restart" --log_path="systemd"
+ynh_systemd_action --service_name=stunnel4 --action="restart" --log_path="systemd"
+
+#=================================================
 # SETUP SSOWAT
 #=================================================
 ynh_script_progression --message="Configuring permissions..." --weight=1
@@ -144,19 +159,11 @@ ynh_permission_create --permission="sync_client" --allowed='visitors' --auth_hea
     --additional_urls="/Microsoft-Server-ActiveSync" "/principals" "/.well-known/caldav" "/.well-known/carddav"
 
 #=================================================
-# INTEGRATE SERVICE IN YUNOHOST
+# RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
+ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 
-yunohost service add $app --description="Groupware for E-Mail, Contacts and Calender" --log="/var/log/$app/$app.log"
-
-#=================================================
-# START SYSTEMD SERVICE
-#=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=1
-
-ynh_systemd_action --service_name=$app --action="restart" --log_path="systemd"
-ynh_systemd_action --service_name=stunnel4 --action="restart" --log_path="systemd"
+ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT
