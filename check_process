@@ -8,9 +8,7 @@
         domain="domain.tld"
         path="/SOGo"
         admin="john"
-        language="French"
         is_public=1
-        port="20000"
     ; Checks
         pkg_linter=1
         setup_sub_dir=1

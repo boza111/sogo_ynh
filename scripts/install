@@ -58,10 +58,10 @@ ynh_app_setting_set --app=$app --key=is_public --value=$is_public
 #=================================================
 ynh_script_progression --message="Finding an available port..." --weight=1
 
-port=$(ynh_find_port --port 20000)
+port=$(ynh_find_port --port=20000)
 ynh_app_setting_set --app=$app --key=web_port --value=$port
 
-smtp_port=$(ynh_find_port --port $((port+1)))
+smtp_port=$(ynh_find_port --port=$((port+1)))
 ynh_app_setting_set --app=$app --key=smtp_port --value=$smtp_port
 
 #=================================================

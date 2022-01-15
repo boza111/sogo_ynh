@@ -68,41 +68,27 @@ if [[ -z $port ]]
 then
     # Find a port for SOGo
     port=$(ynh_find_port --port 20000)
-    ynh_app_setting_set --app $app --key web_port --value $port
+    ynh_app_setting_set --app=$app --key=web_port --value=$port
 fi
 
 if [[ -z $db_name ]]
 then
     db_name=$app
-    ynh_app_setting_set --app $app --key db_name --value $db_name
+    ynh_app_setting_set --app=$app --key=db_name --value=$db_name
 fi
 
 if [[ -z $db_user ]]
 then
     db_user=$app
-    ynh_app_setting_set --app $app --key db_user --value $db_user
-fi
-
-# Manage migration form SOGo 3.x to SOGo 4.x (Debian stretch -> Buster)
-ynh_script_progression --message="Migrating database if needed..."
-
-# FIXME use the new way to manage version when available on the core
-app_previous_version="$(jq -r .version /etc/yunohost/apps/$app/manifest.json | cut -d~ -f1)"
-if [[ "$app_previous_version" == 3.2.* ]]; then
-    ynh_replace_string --match_string __APP__ --replace_string $app --target_file migrations/3.2-4.0.sh
-    ynh_replace_string --match_string __DBUSER__ --replace_string $db_user --target_file migrations/3.2-4.0.sh
-    ynh_replace_string --match_string __DBPASS__ --replace_string $db_pwd --target_file migrations/3.2-4.0.sh
-    bash migrations/3.2-4.0.sh
+    ynh_app_setting_set --app=$app --key=db_user --value=$db_user
 fi
 
 #=================================================
 # STANDARD MODIFICATIONS
 #=================================================
-
-#=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Upgrading dependencies..." --time --weight=1
+ynh_script_progression --message="Upgrading dependencies..." --weight=1
 
 ynh_install_app_dependencies $pkg_dependencies
 
