@@ -9,7 +9,6 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
-
 #=================================================
 # RETRIEVE ARGUMENTS
 #=================================================
@@ -41,8 +40,7 @@ fi
 #=================================================
 # STANDARD MODIFICATIONS
 #=================================================
-
-ynh_script_progression --message="Updating nginx configuration..."
+ynh_script_progression --message="Updating NGINX configuration..."
 
 # MODIFY URL IN NGINX CONF
 nginx_conf_path=/etc/nginx/conf.d/$old_domain.d/$app.conf
