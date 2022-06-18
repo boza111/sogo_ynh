@@ -152,7 +152,7 @@ if ! ynh_permission_exists --permission sync_client; then
         || ynh_print_warn --message="Your file /etc/ssowat/""conf.json.persistent doesn't respect the json syntax. The config file wasn't cleaned. Please clean it manually."
 else
     ynh_permission_update --permission="sync_client" --add='visitors' --label="Sync client" --protected=true --show_tile=false
-    ynh_permission_url  --permission "sync_client" --auth_header=false\
+    ynh_permission_url --permission "sync_client" --auth_header=false\
         --add_url="/Microsoft-Server-ActiveSync" "/principals" "/.well-known/caldav" "/.well-known/carddav"
 fi
 
@@ -164,7 +164,7 @@ fi
 ynh_script_progression --message="Upgrading logrotate configuration..." --weight=1
 
 # Use logrotate to manage app-specific logfile(s)
-ynh_use_logrotate --non-append
+ynh_use_logrotate --logfile="/var/log/$app/sogo.log" --nonappend
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST

@@ -43,12 +43,6 @@ ynh_print_info --message="Declaring files to be backed up..."
 ynh_backup --src_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 
 #=================================================
-# BACKUP LOGROTATE
-#=================================================
-
-ynh_backup --src_path="/etc/logrotate.d/$app"
-
-#=================================================
 # BACKUP SOGo CONFIGURATION
 #=================================================
 
