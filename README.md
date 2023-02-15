@@ -6,6 +6,7 @@ It shall NOT be edited by hand.
 # SOGo for YunoHost
 
 [![Integration level](https://dash.yunohost.org/integration/sogo.svg)](https://dash.yunohost.org/appci/app/sogo) ![Working status](https://ci-apps.yunohost.org/ci/badges/sogo.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/sogo.maintain.svg)
+
 [![Install SOGo with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=sogo)
 
 *[Lire ce readme en français.](./README_fr.md)*
