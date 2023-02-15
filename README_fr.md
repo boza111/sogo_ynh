@@ -5,27 +5,28 @@ It shall NOT be edited by hand.
 
 # SOGo pour YunoHost
 
-[![Niveau d'intégration](https://dash.yunohost.org/integration/sogo.svg)](https://dash.yunohost.org/appci/app/sogo) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/sogo.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/sogo.maintain.svg)  
+[![Niveau d’intégration](https://dash.yunohost.org/integration/sogo.svg)](https://dash.yunohost.org/appci/app/sogo) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/sogo.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/sogo.maintain.svg)
+
 [![Installer SOGo avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=sogo)
 
 *[Read this readme in english.](./README.md)*
 
-> *Ce package vous permet d'installer SOGo rapidement et simplement sur un serveur YunoHost.
-Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l'installer et en profiter.*
+> *Ce package vous permet d’installer SOGo rapidement et simplement sur un serveur YunoHost.
+Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l’installer et en profiter.*
 
-## Vue d'ensemble
+## Vue d’ensemble
 
 SOGo is an opensource groupware solution which has Webmail, a global address book and Calender and Contacts which can be synced via caldav or cardav.
 
 
-**Version incluse :** 5.0.1~ynh1
+**Version incluse :** 5.0.1~ynh2
 
 **Démo :** https://demo.sogo.nu/SOGo/
 ## Documentations et ressources
 
-* Site officiel de l'app : <https://sogo.nu/>
-* Documentation officielle de l'admin : <https://www.sogo.nu/support.html#/documentation>
-* Dépôt de code officiel de l'app : <https://github.com/inverse-inc/sogo>
+* Site officiel de l’app : <https://sogo.nu/>
+* Documentation officielle de l’admin : <https://www.sogo.nu/support.html#/documentation>
+* Dépôt de code officiel de l’app : <https://github.com/inverse-inc/sogo>
 * Documentation YunoHost pour cette app : <https://yunohost.org/app_sogo>
 * Signaler un bug : <https://github.com/YunoHost-Apps/sogo_ynh/issues>
 
@@ -41,4 +42,4 @@ ou
 sudo yunohost app upgrade sogo -u https://github.com/YunoHost-Apps/sogo_ynh/tree/testing --debug
 ```
 
-**Plus d'infos sur le packaging d'applications :** <https://yunohost.org/packaging_apps>
+**Plus d’infos sur le packaging d’applications :** <https://yunohost.org/packaging_apps>

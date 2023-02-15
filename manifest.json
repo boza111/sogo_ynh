@@ -6,7 +6,7 @@
         "en": "Opensource groupware for E-Mail, Contacts and Calender",
         "fr": "Groupware opensource pour les e-mail, contacts et calendrier"
     },
-    "version": "5.0.1~ynh1",
+    "version": "5.0.1~ynh2",
     "url": "https://sogo.nu/",
     "upstream": {
         "license": "LGPL-2.1,GPL-2.0",
@@ -31,7 +31,7 @@
         "mysql"
     ],
     "requirements": {
-        "yunohost": ">= 4.3.0"
+        "yunohost": ">= 11.1.6.1"
     },
     "arguments": {
         "install" : [
@@ -46,7 +46,7 @@
             {
                 "name": "is_public",
                 "type": "boolean",
-                "help": { 
+                "help": {
                     "en": "If it's not public, everybody which want to access to any page of SOGo need to be authenticated on the SSO. On the public mode anybody can access to the authentication page. The shared calendar will be also accessible by anybody who has this link",
                     "fr": "Si n'est pas publique, n'importe qui veux accéder à n'importe quelle page de SOGo doit être authentifié dans le SSO. Dans le mode publique n'importe qui peut accéder à la page d'authentification de SOGo. Les agenda partagé seront aussi accessible par n'import qui qui à ce liens."
                 },
