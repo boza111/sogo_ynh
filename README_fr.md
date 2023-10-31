@@ -27,7 +27,7 @@ SOGo is an opensource groupware solution which has Webmail, a global address boo
 * Site officiel de l’app : <https://sogo.nu/>
 * Documentation officielle de l’admin : <https://www.sogo.nu/support.html#/documentation>
 * Dépôt de code officiel de l’app : <https://github.com/inverse-inc/sogo>
-* Documentation YunoHost pour cette app : <https://yunohost.org/app_sogo>
+* YunoHost Store: <https://apps.yunohost.org/app/sogo>
 * Signaler un bug : <https://github.com/YunoHost-Apps/sogo_ynh/issues>
 
 ## Informations pour les développeurs
