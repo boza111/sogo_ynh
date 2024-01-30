@@ -15,26 +15,26 @@ config_nginx() {
     principals_block='
 # For IOS 7
 location = /principals/ {
-    rewrite ^ https://\$server_name/SOGo/dav;
+    rewrite ^ https://$server_name/SOGo/dav;
     allow all;
 }'
     # shellcheck disable=SC2016
     activesync_block='
 # For ActiveSync
 location /Microsoft-Server-ActiveSync/ {
-    proxy_pass http://127.0.0.1:$port/SOGo/Microsoft-Server-ActiveSync/;
+    proxy_pass http://127.0.0.1:__PORT__/SOGo/Microsoft-Server-ActiveSync/;
 }'
     # shellcheck disable=SC2016
     caldav_block='
 # For Caldav
 location /.well-known/caldav {
-    rewrite ^ https://\$server_name/SOGo/dav/;
+    rewrite ^ https://$server_name/SOGo/dav/;
 }'
     # shellcheck disable=SC2016
     carddav_block='
 # For Carddav
 location /.well-known/carddav {
-    rewrite ^ https://\$server_name/SOGo/dav/;
+    rewrite ^ https://$server_name/SOGo/dav/;
 }'
 
     if ! is_url_handled -d "$domain" -p "/principals"; then
