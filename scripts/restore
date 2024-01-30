@@ -29,7 +29,7 @@ ynh_restore_file --origin_path="/etc/$app"
 chown -R "$app:$app" "/etc/$app"
 chmod -R 750 "/etc/$app"
 
-ynh_backup --src_path="/etc/stunnel/$app.conf"
+ynh_restore_file --origin_path="/etc/stunnel/$app.conf"
 
 ynh_restore_file --origin_path="/etc/cron.d/$app"
 
