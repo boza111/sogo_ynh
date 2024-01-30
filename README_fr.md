@@ -19,7 +19,7 @@ Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) po
 SOGo is an opensource groupware solution which has Webmail, a global address book and Calender and Contacts which can be synced via caldav or cardav.
 
 
-**Version incluse :** 5.0.1~ynh2
+**Version incluse :** 5.0.1~ynh3
 
 **Démo :** https://demo.sogo.nu/SOGo/
 ## Documentations et ressources
