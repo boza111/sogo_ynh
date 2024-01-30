@@ -32,11 +32,9 @@ ram.runtime = "50M" # FIXME: replace with an **estimate** minimum ram requiremen
 
 [install]
     [install.domain]
-    # this is a generic question - ask strings are automatically handled by Yunohost's core
     type = "domain"
 
     [install.admin]
-    # this is a generic question - ask strings are automatically handled by Yunohost's core
     type = "user"
 
     [install.init_main_permission]
@@ -51,7 +49,7 @@ ram.runtime = "50M" # FIXME: replace with an **estimate** minimum ram requiremen
     [resources.install_dir]
 
     [resources.permissions]
-    main.url = "/SOGo"
+    main.url = "/"
 
     sync_client.label = "Sync client"
     sync_client.show_tile = false
