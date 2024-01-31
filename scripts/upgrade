@@ -60,7 +60,7 @@ ynh_script_progression --message="Upgrading system configurations related to $ap
 
 config_nginx
 
-yunohost service add "$app" --description="Groupware for E-Mail, Contacts and Calender" --log="/var/log/$app/$app.log"
+yunohost service add "sogo" --description="Groupware for E-Mail, Contacts and Calender" --log="/var/log/$app/$app.log"
 
 # Use logrotate to manage app-specific logfile(s)
 ynh_use_logrotate --logfile="/var/log/$app/sogo.log" --nonappend

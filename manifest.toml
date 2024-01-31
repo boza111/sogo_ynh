@@ -64,7 +64,12 @@ ram.runtime = "200M"
     smtp.default = 20001
 
     [resources.apt]
-    packages = ["sogo", "stunnel4", "memcached"]
+    packages = [
+        "sogo",
+        "stunnel4",
+        "memcached",
+        "mariadb-server",
+    ]
 
     [resources.database]
     type = "mysql"
