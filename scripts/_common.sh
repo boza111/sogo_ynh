@@ -1,62 +1,91 @@
 #!/bin/bash
 
 #=================================================
-# SET ALL CONSTANTS
+# COMMON VARIABLES
 #=================================================
 
-# dependencies used by the app
-pkg_dependencies="sogo stunnel4 memcached"
-
 #=================================================
-# DEFINE ALL COMMON FONCTIONS
+# PERSONAL HELPERS
 #=================================================
-
-config_stunnel() {
-    ynh_add_config --template="stunnel.conf" --destination="/etc/stunnel/$app.conf"
-
-    # Enable stunnel at startup
-    ynh_replace_string --match_string "ENABLED=0" --replace_string "ENABLED=1" --target_file /etc/default/stunnel4
-}
 
 config_nginx() {
-    ynh_add_nginx_config
+    nginx_config="$YNH_APP_BASEDIR/conf/nginx.conf"
 
-    nginx_domain_path=/etc/nginx/conf.d/$domain.d/*
-    nginx_config_path="/etc/nginx/conf.d/$domain.d/$app.conf"
-
-    grep "/principals" $nginx_domain_path || echo "# For IOS 7
+    # shellcheck disable=SC2016
+    principals_block='
+# For IOS 7
 location = /principals/ {
-    rewrite ^ https://\$server_name/SOGo/dav;
+    rewrite ^ https://$server_name/SOGo/dav;
     allow all;
-}
-" >> "$nginx_config_path"
-
-    grep "/Microsoft-Server-ActiveSync" $nginx_domain_path || echo "# For ActiveSync
+}'
+    # shellcheck disable=SC2016
+    activesync_block='
+# For ActiveSync
 location /Microsoft-Server-ActiveSync/ {
-    proxy_pass http://127.0.0.1:$port/SOGo/Microsoft-Server-ActiveSync/;
-}
-" >> "$nginx_config_path"
-
-    grep "/.well-known/caldav" $nginx_domain_path || echo "# For Caldav
+    proxy_pass http://127.0.0.1:__PORT__/SOGo/Microsoft-Server-ActiveSync/;
+}'
+    # shellcheck disable=SC2016
+    caldav_block='
+# For Caldav
 location /.well-known/caldav {
-    rewrite ^ https://\$server_name/SOGo/dav/;
-}
-" >> "$nginx_config_path"
-
-    grep "/.well-known/carddav" $nginx_domain_path || echo "# For Carddav
+    rewrite ^ https://$server_name/SOGo/dav/;
+}'
+    # shellcheck disable=SC2016
+    carddav_block='
+# For Carddav
 location /.well-known/carddav {
-    rewrite ^ https://\$server_name/SOGo/dav/;
-}
-" >> "$nginx_config_path"
+    rewrite ^ https://$server_name/SOGo/dav/;
+}'
 
-    ynh_store_file_checksum --file "$nginx_config_path"
-
-    systemctl reload nginx
+    if ! is_url_handled -d "$domain" -p "/principals"; then
+        echo "$principals_block" >> "$nginx_config"
+    fi
+    if ! is_url_handled -d "$domain" -p "/Microsoft-Server-ActiveSync"; then
+        echo "$activesync_block" >> "$nginx_config"
+    fi
+    if ! is_url_handled -d "$domain" -p "/.well-known/caldav"; then
+        echo "$caldav_block" >> "$nginx_config"
+    fi
+    if ! is_url_handled -d "$domain" -p "/.wellk-nown/carddav"; then
+        echo "$carddav_block" >> "$nginx_config"
+    fi
+    ynh_add_nginx_config
 }
 
-set_permission() {
-    chown -R $app:$app /etc/$app
-    chmod u=rwX,g=rX,o= -R /etc/$app
-    chown -R $app:$app /var/log/$app
-    chmod u=rwX,g=rX,o= -R /var/log/$app
+#=================================================
+# EXPERIMENTAL HELPERS
+#=================================================
+
+is_url_handled() {
+    # Declare an array to define the options of this helper.
+    local legacy_args=dp
+    declare -Ar args_array=( [d]=domain= [p]=path= )
+    local domain
+    local path
+    # Manage arguments with getopts
+    ynh_handle_getopts_args "$@"
+
+    # Try to get the url with curl, and keep the http code and an eventual redirection url.
+    local curl_output="$(curl --insecure --silent --output /dev/null \
+      --write-out '%{http_code};%{redirect_url}' https://127.0.0.1$path --header "Host: $domain" --resolve $domain:443:127.0.0.1)"
+
+    # Cut the output and keep only the first part to keep the http code
+    local http_code="${curl_output%%;*}"
+    # Do the same thing but keep the second part, the redirection url
+    local redirection="${curl_output#*;}"
+
+    # Return 1 if the url isn't handled.
+    # Which means either curl got a 404 (or the admin) or the sso.
+    # A handled url should redirect to a publicly accessible url.
+    # Return 1 if the url has returned 404
+    if [ "$http_code" = "404" ] || [[ $redirection =~ "/yunohost/admin" ]]; then
+        return 1
+    # Return 1 if the url is redirected to the SSO
+    elif [[ $redirection =~ "/yunohost/sso" ]]; then
+        return 1
+    fi
 }
+
+#=================================================
+# FUTURE OFFICIAL HELPERS
+#=================================================

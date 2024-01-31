@@ -1,0 +1,75 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/manifest.v2.schema.json
+
+packaging_format = 2
+
+id = "sogo"
+name = "SOGo"
+description.en = "Opensource groupware for E-Mail, Contacts and Calender"
+description.fr = "Groupware opensource pour les e-mail, contacts et calendrier"
+
+version = "5.0.1~ynh3"
+
+maintainers = ["Josué Tille"]
+
+[upstream]
+license = "LGPL-2.1,GPL-2.0"
+website = "https://sogo.nu/"
+demo = "https://demo.sogo.nu/SOGo/"
+admindoc = "https://www.sogo.nu/support.html#/documentation"
+code = "https://github.com/inverse-inc/sogo"
+cpe = "cpe:2.3:a:alinto:sogo"
+fund = "https://www.sogo.nu/partner.html"
+
+[integration]
+yunohost = ">= 11.2"
+architectures = "all"
+multi_instance = false
+ldap = true
+sso = true
+disk = "200M"
+ram.build = "300M"
+ram.runtime = "200M"
+
+[install]
+    [install.domain]
+    type = "domain"
+
+    [install.admin]
+    type = "user"
+
+    [install.init_main_permission]
+    help.en = "If it's not public, everybody which want to access to any page of SOGo need to be authenticated on the SSO. On the public mode anybody can access to the authentication page. The shared calendar will be also accessible by anybody who has this link"
+    help.fr = "Si n'est pas publique, n'importe qui veux accéder à n'importe quelle page de SOGo doit être authentifié dans le SSO. Dans le mode publique n'importe qui peut accéder à la page d'authentification de SOGo. Les agenda partagé seront aussi accessible par n'import qui qui à ce liens."
+    type = "group"
+    default = "visitors"
+
+[resources]
+    [resources.system_user]
+
+    [resources.install_dir]
+
+    [resources.permissions]
+    main.url = "/"
+
+    sync_client.label = "Sync client"
+    sync_client.show_tile = false
+    sync_client.protected = true
+    sync_client.allowed = "visitors"
+    sync_client.auth_header = false
+    sync_client.additional_urls = ["/Microsoft-Server-ActiveSync", "/principals", "/.well-known/caldav", "/.well-known/carddav"]
+
+
+    [resources.ports]
+    main.default = 20000
+    smtp.default = 20001
+
+    [resources.apt]
+    packages = [
+        "sogo",
+        "stunnel4",
+        "memcached",
+        "mariadb-server",
+    ]
+
+    [resources.database]
+    type = "mysql"
