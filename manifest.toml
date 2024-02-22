@@ -34,6 +34,10 @@ ram.runtime = "200M"
     [install.domain]
     type = "domain"
 
+    [install.path]
+    type = "path"
+    default = "/SOGo"
+
     [install.admin]
     type = "user"
 

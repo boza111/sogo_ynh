@@ -9,8 +9,9 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
-# Set variable
-path="/SOGo"
+if [[ $path != "/SOGo" ]]; then
+     ynh_die --message "You can't install SOGo on other path than '/SOGo'"
+fi
 
 #=================================================
 # ADD A CONFIGURATION
