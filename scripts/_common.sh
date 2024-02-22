@@ -9,7 +9,7 @@
 #=================================================
 
 config_nginx() {
-    nginx_config="$YNH_APP_BASEDIR/conf/nginx.conf"
+    nginx_config="/etc/nginx/conf.d/$domain/$app.conf"
 
     # shellcheck disable=SC2016
     principals_block='
@@ -37,6 +37,8 @@ location /.well-known/carddav {
     rewrite ^ https://$server_name/SOGo/dav/;
 }'
 
+    ynh_add_nginx_config
+
     if ! is_url_handled -d "$domain" -p "/principals"; then
         echo "$principals_block" >> "$nginx_config"
     fi
@@ -49,7 +51,19 @@ location /.well-known/carddav {
     if ! is_url_handled -d "$domain" -p "/.wellk-nown/carddav"; then
         echo "$carddav_block" >> "$nginx_config"
     fi
-    ynh_add_nginx_config
+    ynh_store_file_checksum --file="$nginx_config"
+    systemctl reload nginx.service
+}
+
+set_permissions() {
+    chown -R "$app:$app" "/etc/$app"
+    chmod -R u=rwX,g=rX,o= "/etc/$app"
+
+    chown -R "$app:$app" "/var/log/$app"
+    chmod -R u=rwX,g=rX,o= "/var/log/$app"
+
+    chown root: "/etc/cron.d/$app"
+    chmod 644 "/etc/cron.d/$app"
 }
 
 #=================================================

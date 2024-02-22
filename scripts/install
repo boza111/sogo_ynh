@@ -20,37 +20,14 @@ ynh_script_progression --message="Configuring application..." --weight=3
 
 mkdir -p "/etc/$app"
 ynh_add_config --template="sogo.conf" --destination="/etc/$app/sogo.conf"
-chown -R "$app:$app" "/etc/$app"
-chmod -R 750 "/etc/$app"
-
-# Configure stunnel
-# To fix the issue https://sogo.nu/bugs/view.php?id=31 we need stunnel to be able to connect correctly to the smtp server
-ynh_add_config --template="stunnel.conf" --destination="/etc/stunnel/$app.conf"
-
-# Enable stunnel at startup
-ynh_replace_string --match_string="ENABLED=0" --replace_string="ENABLED=1" --target_file="/etc/default/stunnel4"
-
-#=================================================
-# SETUP A CRON
-#=================================================
-ynh_script_progression --message="Setting up a cron..." --weight=1
-
 ynh_add_config --template="cron" --destination="/etc/cron.d/$app"
-chown root: "/etc/cron.d/$app"
-chmod 644 "/etc/cron.d/$app"
-
-#=================================================
-# SYSTEM CONFIGURATION
-#=================================================
-ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
-
 config_nginx
+
+ynh_use_logrotate --logfile="/var/log/$app/sogo.log" --nonappend
 
 yunohost service add "sogo" --description="Groupware for E-Mail, Contacts and Calender" --log="/var/log/$app/$app.log"
 
-ynh_use_logrotate --logfile="/var/log/$app/sogo.log" --nonappend
-chown -R "$app:$app" "/var/log/$app"
-chmod -R 750 "/var/log/$app"
+set_permissions
 
 #=================================================
 # START SYSTEMD SERVICE
