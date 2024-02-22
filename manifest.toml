@@ -62,15 +62,9 @@ ram.runtime = "200M"
     sync_client.auth_header = false
     sync_client.additional_urls = ["/Microsoft-Server-ActiveSync", "/principals", "/.well-known/caldav", "/.well-known/carddav"]
 
-
-    [resources.ports]
-    main.default = 20000
-    smtp.default = 20001
-
     [resources.apt]
     packages = [
         "sogo",
-        "stunnel4",
         "memcached",
         "mariadb-server",
     ]
