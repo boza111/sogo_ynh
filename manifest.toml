@@ -45,7 +45,7 @@ ram.runtime = "200M"
     help.en = "If it's not public, everybody which want to access to any page of SOGo need to be authenticated on the SSO. On the public mode anybody can access to the authentication page. The shared calendar will be also accessible by anybody who has this link"
     help.fr = "Si n'est pas publique, n'importe qui veux accéder à n'importe quelle page de SOGo doit être authentifié dans le SSO. Dans le mode publique n'importe qui peut accéder à la page d'authentification de SOGo. Les agenda partagé seront aussi accessible par n'import qui qui à ce liens."
     type = "group"
-    default = "visitors"
+    default = "all_users"
 
 [resources]
     [resources.system_user]
@@ -59,6 +59,9 @@ ram.runtime = "200M"
     sync_client.allowed = "visitors"
     sync_client.auth_header = false
     sync_client.additional_urls = ["/Microsoft-Server-ActiveSync", "/principals", "/.well-known/caldav", "/.well-known/carddav"]
+
+    [resources.ports]
+    main.default = 20000
 
     [resources.apt]
     packages = [
