@@ -22,18 +22,12 @@ ynh_print_info --message="Declaring files to be backed up..."
 # Backup the nginx configuration
 ynh_backup --src_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 
-# Backup the logrotate configuration
-ynh_backup --src_path="/etc/logrotate.d/$app"
-
 #=================================================
 # BACKUP VARIOUS FILES
 #=================================================
 
 # Backup SOGo configuration
 ynh_backup --src_path="/etc/$app"
-
-# Backup Stunnel configuration
-ynh_backup --src_path="/etc/stunnel/$app.conf"
 
 # Backup cron
 ynh_backup --src_path="/etc/cron.d/$app"
