@@ -9,7 +9,7 @@
 #=================================================
 
 config_nginx() {
-    nginx_config="$YNH_APP_BASEDIR/conf/nginx.conf"
+    nginx_config="/etc/nginx/conf.d/$domain.d/$app.conf"
 
     # shellcheck disable=SC2016
     principals_block='
@@ -21,21 +21,32 @@ location = /principals/ {
     # shellcheck disable=SC2016
     activesync_block='
 # For ActiveSync
-location /Microsoft-Server-ActiveSync/ {
-    proxy_pass http://127.0.0.1:__PORT__/SOGo/Microsoft-Server-ActiveSync/;
+location ^~ /Microsoft-Server-ActiveSync {
+    proxy_connect_timeout 75;
+    proxy_send_timeout 3600;
+    proxy_read_timeout 3600;
+    proxy_buffers 64 256k;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+    proxy_pass http://127.0.0.1:'$port'/SOGo/Microsoft-Server-ActiveSync;
 }'
     # shellcheck disable=SC2016
     caldav_block='
 # For Caldav
-location /.well-known/caldav {
+location = /.well-known/caldav {
     rewrite ^ https://$server_name/SOGo/dav/;
 }'
     # shellcheck disable=SC2016
     carddav_block='
 # For Carddav
-location /.well-known/carddav {
+location = /.well-known/carddav {
     rewrite ^ https://$server_name/SOGo/dav/;
 }'
+
+    ynh_add_nginx_config
 
     if ! is_url_handled -d "$domain" -p "/principals"; then
         echo "$principals_block" >> "$nginx_config"
@@ -49,7 +60,19 @@ location /.well-known/carddav {
     if ! is_url_handled -d "$domain" -p "/.wellk-nown/carddav"; then
         echo "$carddav_block" >> "$nginx_config"
     fi
-    ynh_add_nginx_config
+    ynh_store_file_checksum --file="$nginx_config"
+    systemctl reload nginx.service
+}
+
+set_permissions() {
+    chown -R "$app:$app" "/etc/$app"
+    chmod -R u=rwX,g=rX,o= "/etc/$app"
+
+    chown -R "$app:$app" "/var/log/$app"
+    chmod -R u=rwX,g=rX,o= "/var/log/$app"
+
+    chown root: "/etc/cron.d/$app"
+    chmod 644 "/etc/cron.d/$app"
 }
 
 #=================================================

@@ -20,6 +20,7 @@ fi
 ynh_script_progression --message="Updating NGINX configuration..."
 
 ynh_change_url_nginx_config
+config_nginx
 
 #=================================================
 # END OF SCRIPT
