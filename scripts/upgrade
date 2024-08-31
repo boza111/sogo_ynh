@@ -12,9 +12,9 @@ ynh_script_progression "Ensuring downward compatibility..."
 ynh_script_progression "Migrating database if needed..."
 
 if ynh_app_upgrading_from_version_before_or_equal_to 4.0.0~ynh0; then
-    ynh_replace --match __APP__ --replace $app --file migrations/3.2-4.0.sh
-    ynh_replace --match __DBUSER__ --replace $db_user --file migrations/3.2-4.0.sh
-    ynh_replace --match __DBPASS__ --replace $db_pwd --file migrations/3.2-4.0.sh
+    ynh_replace --match=__APP__ --replace="$app" --file=migrations/3.2-4.0.sh
+    ynh_replace --match=__DBUSER__ --replace="$db_user" --file=migrations/3.2-4.0.sh
+    ynh_replace --match=__DBPASS__ --replace="$db_pwd" --file=migrations/3.2-4.0.sh
     bash migrations/3.2-4.0.sh
 fi
 
