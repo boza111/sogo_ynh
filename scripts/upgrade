@@ -1,60 +1,54 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
 # UPGRADE SETTINGS FROM OLD INSTALL
 #=================================================
-ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
+ynh_script_progression "Ensuring downward compatibility..."
 
 # Manage migrations
-ynh_script_progression --message="Migrating database if needed..."
+ynh_script_progression "Migrating database if needed..."
 
-if ynh_compare_current_package_version --comparison le --version 4.0.0~ynh0; then
-    ynh_replace_string --match_string __APP__ --replace_string $app --target_file migrations/3.2-4.0.sh
-    ynh_replace_string --match_string __DBUSER__ --replace_string $db_user --target_file migrations/3.2-4.0.sh
-    ynh_replace_string --match_string __DBPASS__ --replace_string $db_pwd --target_file migrations/3.2-4.0.sh
+if ynh_app_upgrading_from_version_before_or_equal_to 4.0.0~ynh0; then
+    ynh_replace --match __APP__ --replace $app --file migrations/3.2-4.0.sh
+    ynh_replace --match __DBUSER__ --replace $db_user --file migrations/3.2-4.0.sh
+    ynh_replace --match __DBPASS__ --replace $db_pwd --file migrations/3.2-4.0.sh
     bash migrations/3.2-4.0.sh
 fi
 
 #=================================================
 # UPDATE A CONFIG FILE
 #=================================================
-ynh_script_progression --message="Configuring application..." --weight=1
+ynh_script_progression "Configuring application..."
 
 # Configure SOGO
-ynh_add_config --template="sogo.conf" --destination="/etc/$app/sogo.conf"
+ynh_config_add --template="sogo.conf" --destination="/etc/$app/sogo.conf"
 
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Upgrading system configurations related to $app..." --weight=1
+ynh_script_progression "Upgrading system configurations related to $app..."
 
 config_nginx
 
 yunohost service add "sogo" --description="Groupware for E-Mail, Contacts and Calender" --log="/var/log/$app/$app.log"
 
 # Use logrotate to manage app-specific logfile(s)
-ynh_use_logrotate --logfile="/var/log/$app/sogo.log" --nonappend
+ynh_config_add_logrotate "/var/log/$app/sogo.log"
 
 set_permissions
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=1
+ynh_script_progression "Starting $app's systemd service..."
 
-ynh_systemd_action --service_name="$app" --action="restart" --log_path="systemd"
+ynh_systemctl --service="$app" --action="restart" --log_path="systemd"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Upgrade of $app completed" --last
+ynh_script_progression "Upgrade of $app completed"

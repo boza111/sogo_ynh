@@ -1,11 +1,7 @@
 #!/bin/bash
 
 #=================================================
-# COMMON VARIABLES
-#=================================================
-
-#=================================================
-# PERSONAL HELPERS
+# COMMON VARIABLES AND CUSTOM HELPERS
 #=================================================
 
 config_nginx() {
@@ -46,7 +42,7 @@ location = /.well-known/carddav {
     rewrite ^ https://$server_name/SOGo/dav/;
 }'
 
-    ynh_add_nginx_config
+    ynh_config_add_nginx
 
     if ! is_url_handled -d "$domain" -p "/principals"; then
         echo "$principals_block" >> "$nginx_config"
@@ -60,7 +56,7 @@ location = /.well-known/carddav {
     if ! is_url_handled -d "$domain" -p "/.wellk-nown/carddav"; then
         echo "$carddav_block" >> "$nginx_config"
     fi
-    ynh_store_file_checksum --file="$nginx_config"
+    ynh_store_file_checksum "$nginx_config"
     systemctl reload nginx.service
 }
 
@@ -68,20 +64,16 @@ set_permissions() {
     chown -R "$app:$app" "/etc/$app"
     chmod -R u=rwX,g=rX,o= "/etc/$app"
 
-    chown -R "$app:$app" "/var/log/$app"
-    chmod -R u=rwX,g=rX,o= "/var/log/$app"
+    #REMOVEME? Assuming ynh_config_add_logrotate is called, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R "$app:$app" "/var/log/$app"
+    #REMOVEME? Assuming ynh_config_add_logrotate is called, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod -R u=rwX,g=rX,o= "/var/log/$app"
 
-    chown root: "/etc/cron.d/$app"
-    chmod 644 "/etc/cron.d/$app"
+    #REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown root: "/etc/cron.d/$app"
+    #REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 644 "/etc/cron.d/$app"
 }
-
-#=================================================
-# EXPERIMENTAL HELPERS
-#=================================================
 
 is_url_handled() {
     # Declare an array to define the options of this helper.
-    local legacy_args=dp
+    #REMOVEME? local legacy_args=dp
     declare -Ar args_array=( [d]=domain= [p]=path= )
     local domain
     local path
@@ -108,7 +100,3 @@ is_url_handled() {
         return 1
     fi
 }
-
-#=================================================
-# FUTURE OFFICIAL HELPERS
-#=================================================
