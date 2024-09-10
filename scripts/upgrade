@@ -18,6 +18,8 @@ if ynh_app_upgrading_from_version_before_or_equal_to 4.0.0~ynh0; then
     bash migrations/3.2-4.0.sh
 fi
 
+ynh_app_setting_set_default --key=protect_against_basic_auth_spoofing --value=false
+
 #=================================================
 # UPDATE A CONFIG FILE
 #=================================================
