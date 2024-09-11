@@ -4,6 +4,8 @@
 # COMMON VARIABLES AND CUSTOM HELPERS
 #=================================================
 
+readonly time_zone=$(cat /etc/timezone)
+
 config_nginx() {
     nginx_config="/etc/nginx/conf.d/$domain.d/$app.conf"
 
