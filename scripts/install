@@ -7,7 +7,7 @@ if [[ $path != "/SOGo" ]]; then
      ynh_die  "You can't install SOGo on other path than '/SOGo'"
 fi
 
-ynh_app_setting_set_default --key=protect_against_basic_auth_spoofing --value=false
+ynh_app_setting_set --key=protect_against_basic_auth_spoofing --value=false
 
 #=================================================
 # ADD A CONFIGURATION
@@ -30,6 +30,8 @@ set_permissions
 ynh_script_progression "Starting $app's systemd service..."
 
 ynh_systemctl --service="$app" --action="restart" --log_path="systemd"
+
+ynh_app_setting_set --key=previous_sogo_version --value="$current_sogo_version"
 
 #=================================================
 # END OF SCRIPT

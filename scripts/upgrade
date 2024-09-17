@@ -11,14 +11,12 @@ ynh_script_progression "Ensuring downward compatibility..."
 # Manage migrations
 ynh_script_progression "Migrating database if needed..."
 
-if ynh_app_upgrading_from_version_before_or_equal_to 4.0.0~ynh0; then
-    ynh_replace --match=__APP__ --replace="$app" --file=migrations/3.2-4.0.sh
-    ynh_replace --match=__DBUSER__ --replace="$db_user" --file=migrations/3.2-4.0.sh
-    ynh_replace --match=__DBPASS__ --replace="$db_pwd" --file=migrations/3.2-4.0.sh
-    bash migrations/3.2-4.0.sh
+if [ -z "${previous_sogo_version:-}" ]; then
+    previous_sogo_version=5.0.1
 fi
+handle_migration_if_needed
 
-ynh_app_setting_set_default --key=protect_against_basic_auth_spoofing --value=false
+ynh_app_setting_set --key=protect_against_basic_auth_spoofing --value=false
 
 #=================================================
 # UPDATE A CONFIG FILE
@@ -48,6 +46,8 @@ set_permissions
 ynh_script_progression "Starting $app's systemd service..."
 
 ynh_systemctl --service="$app" --action="restart" --log_path="systemd"
+
+ynh_app_setting_set --key=previous_sogo_version --value="$current_sogo_version"
 
 #=================================================
 # END OF SCRIPT

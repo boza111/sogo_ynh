@@ -5,6 +5,8 @@
 #=================================================
 
 readonly time_zone=$(cat /etc/timezone)
+# Note we can't use the upstream version helper as this version depends of the Debian package not this package and the value could differ depending of the Debian version
+readonly current_sogo_version="$(dpkg-query --show --showformat='${Version}' sogo | cut -d- -f1)"
 
 config_nginx() {
     nginx_config="/etc/nginx/conf.d/$domain.d/$app.conf"
@@ -99,5 +101,17 @@ is_url_handled() {
     # Return 1 if the url is redirected to the SSO
     elif [[ "$redirection" =~ "/yunohost/sso" ]]; then
         return 1
+    fi
+}
+
+handle_migration_if_needed() {
+    if dpkg --compare-versions "$current_sogo_version" gt 5.8.0; then
+        ynh_print_warn "Currently a SOGo version > 5.8.0 is not supported by this package. Use it at your own risk."
+    fi
+    if [ "$current_sogo_version" != "$previous_sogo_version" ]; then
+        # Migration from 5.0.1 -> 5.8.0
+        if dpkg --compare-versions "$previous_sogo_version" lt 5.8.0; then
+            ynh_mysql_db_shell <<< 'DROP TABLE IF EXISTS sogo_sessions_folder;'
+        fi
     fi
 }

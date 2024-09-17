@@ -24,6 +24,10 @@ ynh_script_progression "Restoring system configurations related to $app..."
 yunohost service add "sogo" --description="Groupware for E-Mail, Contacts and Calender" --log="/var/log/$app/$app.log"
 set_permissions
 
+ynh_script_progression "Migrating database if needed..."
+# In case of a backup on Yunohost 11 and a restore on Yunohost 12
+handle_migration_if_needed
+
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
@@ -40,6 +44,8 @@ ynh_systemctl --service="nginx" --action=reload
 
 # Use logrotate to manage app-specific logfile(s)
 ynh_config_add_logrotate "/var/log/$app/sogo.log"
+
+ynh_app_setting_set --key=previous_sogo_version --value="$current_sogo_version"
 
 #=================================================
 # END OF SCRIPT

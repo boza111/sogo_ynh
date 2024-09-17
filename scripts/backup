@@ -6,6 +6,10 @@ source /usr/share/yunohost/helpers
 
 ynh_print_info "Declaring files to be backed up..."
 
+if systemctl is-active sogo --quiet; then
+    ynh_print_warn "It's hightly recommended to make your backup when the service is stopped. Please stop sogo service with this command before to run the backup 'systemctl stop sogo.service'"
+fi
+
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
