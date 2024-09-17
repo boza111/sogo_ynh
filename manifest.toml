@@ -59,7 +59,7 @@ ram.runtime = "200M"
     sync_client.protected = true
     sync_client.allowed = "visitors"
     sync_client.auth_header = false
-    sync_client.additional_urls = ["/Microsoft-Server-ActiveSync", "/principals", "/.well-known/caldav", "/.well-known/carddav"]
+    sync_client.additional_urls = ["/Microsoft-Server-ActiveSync", "/principals", "/.well-known/caldav", "/.well-known/carddav", "dav"]
 
     [resources.ports]
     main.default = 20000
