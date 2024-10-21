@@ -5,7 +5,7 @@ No se debe editar a mano.
 
 # SOGo para Yunohost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/sogo.svg)](https://dash.yunohost.org/appci/app/sogo) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/sogo.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/sogo.maintain.svg)
+[![Nivel de integración](https://dash.yunohost.org/integration/sogo.svg)](https://ci-apps.yunohost.org/ci/apps/sogo/) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/sogo.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/sogo.maintain.svg)
 
 [![Instalar SOGo con Yunhost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=sogo)
 
@@ -19,7 +19,7 @@ No se debe editar a mano.
 SOGo is an opensource groupware solution which has Webmail, a global address book and Calender and Contacts which can be synced via caldav or cardav.
 
 
-**Versión actual:** 5.0.1~ynh4
+**Versión actual:** 5.8.0~ynh5
 
 **Demo:** <https://demo.sogo.nu/SOGo/>
 ## Documentaciones y recursos
@@ -32,7 +32,7 @@ SOGo is an opensource groupware solution which has Webmail, a global address boo
 
 ## Información para desarrolladores
 
-Por favor enviar sus correcciones a la [`branch testing`](https://github.com/YunoHost-Apps/sogo_ynh/tree/testing
+Por favor enviar sus correcciones a la [rama `testing`](https://github.com/YunoHost-Apps/sogo_ynh/tree/testing).
 
 Para probar la rama `testing`, sigue asÍ:
 
