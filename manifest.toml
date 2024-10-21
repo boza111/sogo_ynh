@@ -7,7 +7,11 @@ name = "SOGo"
 description.en = "Opensource groupware for E-Mail, Contacts and Calender"
 description.fr = "Groupware opensource pour les e-mail, contacts et calendrier"
 
-version = "5.0.1~ynh4"
+# Note the upstream version is not really the real version of SOGo as it's provided by Debian
+# and it's depends on the debian version
+# at this point we could have SOGo 5.0.1 on Debian 11 or SOGo 5.8.0 on Debian 12
+# So this value it's more the maximum supported version by the package (currently the version provided by Debian 12)
+version = "5.8.0~ynh5"
 
 maintainers = ["Josué Tille"]
 
@@ -21,7 +25,8 @@ cpe = "cpe:2.3:a:alinto:sogo"
 fund = "https://www.sogo.nu/partner.html"
 
 [integration]
-yunohost = ">= 11.2"
+yunohost = ">= 11.2.30"
+helpers_version = "2.1"
 architectures = "all"
 multi_instance = false
 ldap = true
@@ -58,7 +63,7 @@ ram.runtime = "200M"
     sync_client.protected = true
     sync_client.allowed = "visitors"
     sync_client.auth_header = false
-    sync_client.additional_urls = ["/Microsoft-Server-ActiveSync", "/principals", "/.well-known/caldav", "/.well-known/carddav"]
+    sync_client.additional_urls = ["/Microsoft-Server-ActiveSync", "/principals", "/.well-known/caldav", "/.well-known/carddav", "/SOGo/dav"]
 
     [resources.ports]
     main.default = 20000

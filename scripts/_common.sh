@@ -1,12 +1,12 @@
 #!/bin/bash
 
 #=================================================
-# COMMON VARIABLES
+# COMMON VARIABLES AND CUSTOM HELPERS
 #=================================================
 
-#=================================================
-# PERSONAL HELPERS
-#=================================================
+readonly time_zone=$(cat /etc/timezone)
+# Note we can't use the upstream version helper as this version depends of the Debian package not this package and the value could differ depending of the Debian version
+readonly current_sogo_version="$(dpkg-query --show --showformat='${Version}' sogo | cut -d- -f1)"
 
 config_nginx() {
     nginx_config="/etc/nginx/conf.d/$domain.d/$app.conf"
@@ -31,7 +31,7 @@ location ^~ /Microsoft-Server-ActiveSync {
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
-    proxy_pass http://127.0.0.1:'$port'/SOGo/Microsoft-Server-ActiveSync;
+    proxy_pass http://127.0.0.1:'"$port"'/SOGo/Microsoft-Server-ActiveSync;
 }'
     # shellcheck disable=SC2016
     caldav_block='
@@ -46,7 +46,7 @@ location = /.well-known/carddav {
     rewrite ^ https://$server_name/SOGo/dav/;
 }'
 
-    ynh_add_nginx_config
+    ynh_config_add_nginx
 
     if ! is_url_handled -d "$domain" -p "/principals"; then
         echo "$principals_block" >> "$nginx_config"
@@ -60,7 +60,7 @@ location = /.well-known/carddav {
     if ! is_url_handled -d "$domain" -p "/.wellk-nown/carddav"; then
         echo "$carddav_block" >> "$nginx_config"
     fi
-    ynh_store_file_checksum --file="$nginx_config"
+    ynh_store_file_checksum "$nginx_config"
     systemctl reload nginx.service
 }
 
@@ -75,13 +75,8 @@ set_permissions() {
     chmod 644 "/etc/cron.d/$app"
 }
 
-#=================================================
-# EXPERIMENTAL HELPERS
-#=================================================
-
 is_url_handled() {
     # Declare an array to define the options of this helper.
-    local legacy_args=dp
     declare -Ar args_array=( [d]=domain= [p]=path= )
     local domain
     local path
@@ -90,7 +85,7 @@ is_url_handled() {
 
     # Try to get the url with curl, and keep the http code and an eventual redirection url.
     local curl_output="$(curl --insecure --silent --output /dev/null \
-      --write-out '%{http_code};%{redirect_url}' https://127.0.0.1$path --header "Host: $domain" --resolve $domain:443:127.0.0.1)"
+      --write-out '%{http_code};%{redirect_url}' https://127.0.0.1"$path" --header "Host: $domain" --resolve "$domain":443:127.0.0.1)"
 
     # Cut the output and keep only the first part to keep the http code
     local http_code="${curl_output%%;*}"
@@ -101,14 +96,22 @@ is_url_handled() {
     # Which means either curl got a 404 (or the admin) or the sso.
     # A handled url should redirect to a publicly accessible url.
     # Return 1 if the url has returned 404
-    if [ "$http_code" = "404" ] || [[ $redirection =~ "/yunohost/admin" ]]; then
+    if [ "$http_code" = "404" ] || [[ "$redirection" =~ "/yunohost/admin" ]]; then
         return 1
     # Return 1 if the url is redirected to the SSO
-    elif [[ $redirection =~ "/yunohost/sso" ]]; then
+    elif [[ "$redirection" =~ "/yunohost/sso" ]]; then
         return 1
     fi
 }
 
-#=================================================
-# FUTURE OFFICIAL HELPERS
-#=================================================
+handle_migration_if_needed() {
+    if dpkg --compare-versions "$current_sogo_version" gt 5.8.0; then
+        ynh_print_warn "Currently a SOGo version > 5.8.0 is not supported by this package. Use it at your own risk."
+    fi
+    if [ "$current_sogo_version" != "$previous_sogo_version" ]; then
+        # Migration from 5.0.1 -> 5.8.0
+        if dpkg --compare-versions "$previous_sogo_version" lt 5.8.0; then
+            ynh_mysql_db_shell <<< 'DROP TABLE IF EXISTS sogo_sessions_folder;'
+        fi
+    fi
+}

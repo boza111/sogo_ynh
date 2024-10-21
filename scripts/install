@@ -1,28 +1,24 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
 if [[ $path != "/SOGo" ]]; then
-     ynh_die --message "You can't install SOGo on other path than '/SOGo'"
+     ynh_die  "You can't install SOGo on other path than '/SOGo'"
 fi
+
+ynh_app_setting_set --key=protect_against_basic_auth_spoofing --value=false
 
 #=================================================
 # ADD A CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring application..." --weight=3
+ynh_script_progression "Configuring application..."
 
 mkdir -p "/etc/$app"
-ynh_add_config --template="sogo.conf" --destination="/etc/$app/sogo.conf"
+ynh_config_add --template="sogo.conf" --destination="/etc/$app/sogo.conf"
 config_nginx
 
-ynh_use_logrotate --logfile="/var/log/$app/sogo.log" --nonappend
+ynh_config_add_logrotate "/var/log/$app/sogo.log"
 
 yunohost service add "sogo" --description="Groupware for E-Mail, Contacts and Calender" --log="/var/log/$app/$app.log"
 
@@ -31,12 +27,14 @@ set_permissions
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=1
+ynh_script_progression "Starting $app's systemd service..."
 
-ynh_systemd_action --service_name="$app" --action="restart" --log_path="systemd"
+ynh_systemctl --service="$app" --action="restart" --log_path="systemd"
+
+ynh_app_setting_set --key=previous_sogo_version --value="$current_sogo_version"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --last
+ynh_script_progression "Installation of $app completed"
