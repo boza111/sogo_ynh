@@ -5,7 +5,7 @@ source /usr/share/yunohost/helpers
 
 # Check if the new path stay /SOGo if not exit
 if [[ $path != "/SOGo" ]]; then
-    ynh_die  "You can't use an other path than '/SOGo'"
+    ynh_die "You can't use an other path than '/SOGo'"
 fi
 
 #=================================================
