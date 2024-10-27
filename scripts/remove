@@ -31,11 +31,6 @@ ynh_safe_rm "/etc/$app"
 # Remove stunnel config
 ynh_safe_rm "/etc/stunnel/$app.conf"
 
-if [ "$YNH_APP_PURGE" -eq 1 ]; then
-    ynh_script_progression "Removing logs..."
-    ynh_safe_rm /var/log/"$app"
-fi
-
 #=================================================
 # END OF SCRIPT
 #=================================================
