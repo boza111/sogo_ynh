@@ -4,7 +4,7 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 if [[ $path != "/SOGo" ]]; then
-     ynh_die  "You can't install SOGo on other path than '/SOGo'"
+     ynh_die "You can't install SOGo on other path than '/SOGo'"
 fi
 
 ynh_app_setting_set --key=protect_against_basic_auth_spoofing --value=false
