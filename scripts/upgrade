@@ -8,6 +8,8 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression "Ensuring downward compatibility..."
 
+check_hostfile_configuration
+
 # Manage migrations
 ynh_script_progression "Migrating database if needed..."
 

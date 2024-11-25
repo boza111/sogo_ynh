@@ -115,3 +115,9 @@ handle_migration_if_needed() {
         fi
     fi
 }
+
+check_hostfile_configuration() {
+    if grep -qF "." /etc/hostname; then
+        ynh_print_warn "Your file /etc/hostname should contains only the short hostname, not the FQDN. Having the FQDN (full hostname) in '/etc/hostname' will break the feature of this application and is not recommended. See https://github.com/YunoHost/issues/issues/2460 for more details."
+    fi
+}

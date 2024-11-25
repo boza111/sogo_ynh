@@ -3,6 +3,8 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
+check_hostfile_configuration
+
 if [[ $path != "/SOGo" ]]; then
      ynh_die "You can't install SOGo on other path than '/SOGo'"
 fi

@@ -4,6 +4,8 @@
 source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
+check_hostfile_configuration
+
 #=================================================
 # RESTORE THE MYSQL DATABASE
 #=================================================
