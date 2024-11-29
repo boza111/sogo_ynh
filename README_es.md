@@ -5,7 +5,9 @@ No se debe editar a mano.
 
 # SOGo para Yunohost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/sogo.svg)](https://ci-apps.yunohost.org/ci/apps/sogo/) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/sogo.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/sogo.maintain.svg)
+[![Nivel de integración](https://apps.yunohost.org/badge/integration/sogo)](https://ci-apps.yunohost.org/ci/apps/sogo/)
+![Estado funcional](https://apps.yunohost.org/badge/state/sogo)
+![Estado En Mantención](https://apps.yunohost.org/badge/maintained/sogo)
 
 [![Instalar SOGo con Yunhost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=sogo)
 
@@ -19,7 +21,7 @@ No se debe editar a mano.
 SOGo is an opensource groupware solution which has Webmail, a global address book and Calender and Contacts which can be synced via caldav or cardav.
 
 
-**Versión actual:** 5.8.0~ynh5
+**Versión actual:** 5.8.0~ynh6
 
 **Demo:** <https://demo.sogo.nu/SOGo/>
 ## Documentaciones y recursos
